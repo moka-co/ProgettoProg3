@@ -38,11 +38,13 @@ public class Authentication extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		// response.getWriter().append("Served at: ").append(request.getContextPath());
+
+		
 		out = response.getOutputStream();
 		gui = new AuthenticationGUI(out);
 		
 		int x = save.getValue();
-		System.out.println(x);
+		//System.out.println(x);
 		//Da rifattorizzare perché questa parte va messa in AuthenticationGUI
 		switch(x) {
 		case 0:
@@ -66,15 +68,28 @@ public class Authentication extends HttpServlet {
 		String user = request.getParameter("email");
 		String passw = request.getParameter("password");
 		
-		System.out.println(user);
-		System.out.println(passw);
+		//System.out.println(user);
+		//System.out.println(passw);
 		
 		response.setContentType("text/html");
-		//response.sendRedirect("/hoppin/Authentication");
+		
+		
+		//_________________MYSQL________________________
+		//MySQLConnect db = new MySQLConnect();
+		MySQLConnect db = new MySQLConnect();
+			
+		//_________________________________________
 		
 		if ( ! user.equals("") && ! passw.equals("")) {
 			if (user.equals("pinco@pallo") ) {
+				boolean res = db.login(user, passw);
+				if ( res == true ) {
+					System.out.println("Utente trovato nel database");
+				}else {
+					System.out.println("Utente non trovato");
+				}
 				
+				// Penso bisognerebbe creare una nuova classe Cookie e rifattorizzare questa parte
 				Cookie newCookie = new Cookie("pinco","pallo");
 				newCookie.setMaxAge(0);
 				
@@ -84,7 +99,6 @@ public class Authentication extends HttpServlet {
 				String comment= dat.toString();
 				Cookie biscotto = new Cookie(name, value);
 				String cookiePath = request.getContextPath();
-				System.out.println(cookiePath);
 				biscotto.setPath(cookiePath);
 				biscotto.setComment(comment);
 				biscotto.setDomain("aaaa");
@@ -94,7 +108,6 @@ public class Authentication extends HttpServlet {
 				
 				response.sendRedirect("/hoppin/goodPassword.html");
 				
-				System.out.println("A Cookie has been created successfully");
 			}else {
 				save.setValue(1);
 				response.sendRedirect("/hoppin/Authentication");

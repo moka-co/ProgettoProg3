@@ -7,9 +7,6 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-import java.util.ArrayList;
-import java.util.Date;
-
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -22,8 +19,8 @@ import jakarta.servlet.ServletResponse;
  * Servlet Filter implementation class AuthFilter
  */
 public class AuthFilter extends HttpFilter {
+	private static final long serialVersionUID = 1L;
 	private FilterConfig filterConfig = null;
-	 private ArrayList<String> urlList;
 	 
        
     /**
@@ -48,26 +45,28 @@ public class AuthFilter extends HttpFilter {
 		// TODO Auto-generated method stub
 		// place your code here
 		HttpServletRequest req = (HttpServletRequest) request;
-		HttpSession session = req.getSession(true);
 		
 		//String ipAddress = req.getRemoteAddr(); 
 		//System.out.println("IP Address " +ipAddress + ", Time is " 
 							//+ new Date().toString());
 
 		// pass the request along the filter chain
+		boolean flag = false;
 		
 		Cookie [] cookies = req.getCookies();
 		if (cookies != null) {
 			for (Cookie aCookie : cookies) {
 				String comp = aCookie.getName()+'@'+aCookie.getValue();
 				if ( comp.equals("pinco@pallo")) {
+					flag = true;
 					chain.doFilter(request, response);
 				}
 			}
 		}
-		
-		RequestDispatcher rd = request.getRequestDispatcher("/");
-        rd.forward(request, response);
+		if ( flag == false ) {
+			RequestDispatcher rd = request.getRequestDispatcher("/");
+			rd.forward(request, response);
+		}
 		
 	}
 
