@@ -1,5 +1,6 @@
 
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.annotation.WebServlet;
@@ -53,6 +54,9 @@ public class Authentication extends HttpServlet {
 		case 1:
 			gui.badCredentials();
 			break;		
+		case 2:
+			gui.registerSuccess();
+			break;
 		}
 		save.setValue(0);
 
@@ -64,14 +68,20 @@ public class Authentication extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
+		response.setContentType("text/html");
+		
+		if ( request.getParameter("register") != null ) {
+			//response.sendRedirect("/hoppin/Register");
+			RequestDispatcher rd = request.getRequestDispatcher("/Register");
+			rd.forward(request, response);
+			return;
+		}
 		
 		String user = request.getParameter("email");
 		String passw = request.getParameter("password");
 		
 		//System.out.println(user);
 		//System.out.println(passw);
-		
-		response.setContentType("text/html");
 		
 		
 		//_________________MYSQL________________________
@@ -81,13 +91,9 @@ public class Authentication extends HttpServlet {
 		//_________________________________________
 		
 		if ( ! user.equals("") && ! passw.equals("")) {
-			if (user.equals("pinco@pallo") ) {
-				boolean res = db.login(user, passw);
-				if ( res == true ) {
-					System.out.println("Utente trovato nel database");
-				}else {
-					System.out.println("Utente non trovato");
-				}
+			boolean auth = db.login(user, passw);
+			if ( auth == true) {
+				System.out.println("Utente autenticato");
 				
 				// Penso bisognerebbe creare una nuova classe Cookie e rifattorizzare questa parte
 				Cookie newCookie = new Cookie("pinco","pallo");
@@ -109,6 +115,7 @@ public class Authentication extends HttpServlet {
 				response.sendRedirect("/hoppin/goodPassword.html");
 				
 			}else {
+				System.out.println("Utente non trovato");
 				save.setValue(1);
 				response.sendRedirect("/hoppin/Authentication");
 			}

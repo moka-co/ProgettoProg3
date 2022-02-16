@@ -63,9 +63,10 @@ public class AuthFilter extends HttpFilter {
 				}
 			}
 		}
-		if ( flag == false ) {
+		if ( flag == false ) { // https://stackoverflow.com/questions/18211497/servlet-cannot-forward-after-response-has-been-committed
 			RequestDispatcher rd = request.getRequestDispatcher("/");
 			rd.forward(request, response);
+			
 		}
 		
 	}

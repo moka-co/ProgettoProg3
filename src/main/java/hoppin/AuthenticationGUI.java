@@ -16,13 +16,15 @@ public class AuthenticationGUI {
 		return this;
 	}
 	
-	
+	// Da rifattorizzare perché c'è ridondanza
 	public void base() throws IOException {
 		String nw = System.getProperty("line.separator");
 		printer.println("<html>" + "<h2>Autenticazione</h2>" +  nw + "<br>" + nw + "<p>" + nw
 				+ "<form action=\"./Authentication\" method=\"post\">" + nw + "Email <input type=\"text\" name=\"email\"></input>" + nw +
 				"<br>" + nw + "Password <input type=\"password\" name=\"password\"></input>" + nw + "<br> <br>" + nw + 
-				"<input type=\"submit\" value=\"Accedi\"></input>" + nw + "</form>" + "<br>" + "</html>"
+				"<input type=\"submit\" value=\"Accedi\"></input>" + nw + 
+				"<button name=\"register\" value=\"register\">Registrati</button>" + 
+				"</form>" + "<br>" + "</html>"
 				);
 
 	}
@@ -37,13 +39,34 @@ public class AuthenticationGUI {
 				);
 	}
 	
-	public void error() throws IOException {
-		printer.println("<p>Non è stato trovato nessun utente associato con questa combinazione di email e password</p>");
+	public void register() throws IOException { // Da rifattorizzare perché c'è ridondanza
+		String nw = System.getProperty("line.separator");
+		printer.println("<html>" + "<h2>Registrazione</h2>" +  nw + "<br>" + nw + 
+				"<p>" + nw
+				+ "<form action=\"./Register\" method=\"post\">" + nw + 
+				"Nome e Cognome <input type=\"text\" name=\"name\"></input>" + nw + "<br>" + nw + 
+				"Email <input type=\"text\" name=\"email\"></input>" + nw + "<br>" + nw + 
+				"Password <input type=\"password\" name=\"password\"></input>" + nw + "<br> <br>" + nw + 
+				"<input type=\"submit\" value=\"Conferma\"></input>" + nw + "</form>" + "<br>" + nw + "<br> <br>" + 
+				
+				"</html>" 
+				);
 	}
 	
-	public void insertedValues(String user, String passw) throws IOException {
-		printer.println("<p>Inseriti i valori: " + user + " e " + passw);
-		printer.println("</p>");
+	public void registerSuccess() throws IOException {
+		String nw = System.getProperty("line.separator");
+		printer.println("<html>" + "<h2>Login</h2>" +  nw + "<br>" + nw + "<p>" + nw
+				+ "<form action=\"./Authentication\" method=\"post\">" + nw + "Email <input type=\"text\" name=\"email\"></input>" + nw +
+				"<br>" + nw + "Password <input type=\"password\" name=\"password\"></input>" + nw + "<br> <br>" + nw + 
+				"<input type=\"submit\" value=\"Accedi\"></input>" + nw + 
+				"<button name=\"register\" value=\"register\">Registrati</button>" + 
+				"</form>" + "<br>" + 
+				
+				"<p style=\"color:red\">Registrazione effettuata con successo, ora puoi effettuare l'accesso</p>" + 
+				
+				"</html>"
+				);
+
 	}
 
 }
