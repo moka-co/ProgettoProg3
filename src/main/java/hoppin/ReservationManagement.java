@@ -1,0 +1,101 @@
+package hoppin;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+/**
+ * Servlet implementation class ReservationManagement
+ */
+public class ReservationManagement extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public ReservationManagement() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+		
+        
+        ArrayList<Reservation> rlist = null;
+        
+        Cookie [] cookies = request.getCookies(); 
+        int id = 0;
+		for (Cookie aCookie : cookies) {
+			String name = aCookie.getName();
+			if (name.equals("id")){
+				String value = aCookie.getValue();
+				id = Integer.valueOf(value);
+			}
+		}
+		
+		//________________
+		
+		MySQLConnect db = new MySQLConnect();
+		
+		rlist = db.getReservationList(id);
+		
+		db.disconnect();
+		HttpSession session=request.getSession();
+		session.setAttribute("rlist",rlist);
+		response.sendRedirect("/hoppin/ReservationManagement.jsp");
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		//doGet(request, response);
+		HttpSession session=request.getSession();
+		
+		if ( request.getParameter("ConfirmAddReservation") != null) {
+			System.out.println(request.getParameter("ConfirmAddReservation"));
+			String name = request.getParameter("name");
+			String room = request.getParameter("room");
+			String checkin = request.getParameter("checkin");
+			String checkout = request.getParameter("checkout");
+			String pckg = request.getParameter("package");
+			if (pckg == null) {
+				pckg = "Base";
+			}
+			
+			if ( name == null || room == null || checkin == null || checkout == null) {
+				System.out.println("Error");
+				return;
+			}
+			
+
+			MySQLConnect db = new MySQLConnect();
+			boolean res = db.addReservation(name, room, checkin, checkout, pckg);
+				
+			if ( res == true) {
+				session.setAttribute("ResultAddEmployee","ok");
+					
+			}else {
+				session.setAttribute("ResultAddEmployee","no");
+			}
+			
+			//response.sendRedirect("/hoppin/EmployeeManagement.jsp");
+			doGet(request, response);
+		}
+	}
+
+}
