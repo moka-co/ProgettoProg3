@@ -93,7 +93,6 @@ public class Authentication extends HttpServlet {
 		if ( ! user.equals("") && ! passw.equals("")) {
 			boolean auth = db.login(user, passw);
 			if ( auth == true) {
-				System.out.println("Utente autenticato");
 				String [] splitd = user.split("@");
 				
 				// Penso bisognerebbe creare una nuova classe Cookie e rifattorizzare questa parte

@@ -30,7 +30,7 @@ td, th {
 <body>
 
 <br>
-<div class=".anywhere">
+<div>
 <h2>Prenotazioni:</h2>
 <table>
 <tr>
@@ -51,8 +51,10 @@ td, th {
 </c:forEach>
 </table>
 </div>
-<button id="AddPrenotation">Aggiungi prenotazione</button>
-<div class="invisibleDiv" style="opacity: 0">
+<button name="AddReservation" id="AddReservation">Aggiungi prenotazione</button>
+<button name="EditReservation" id="EditReservation">Modifica prenotazione</button>
+<button name="DeleteReservation" id="DeleteReservation">Elimina prenotazione</button>
+<div id="invisibleDiv1" hidden="hidden">
 		<p>Inserisci i dati della nuova prenotazione: </p>
        	 <form action="./ReservationManagement" method="post">
         	Nome Prenotazione <input type="text" name="name"></input> <br>
@@ -61,25 +63,115 @@ td, th {
         	Check-Out <input type="date" name="checkout"></input> <br> <br>
         	Pacchetto <input type="text" name="package"></input> <br> <br>
 		<input name="ConfirmAddReservation" type="submit" value="Conferma Aggiunta Prenotazione"></input> <br>
+		</form>
 </div>
+
+<div id="invisibleDiv2" hidden="hidden">
+		<p>Inserisci i dati della nuova prenotazione: </p>
+       	 <form action="./ReservationManagement" method="post">
+        	Nome Prenotazione <input type="text" name="name"></input> <br>
+       	  Stanza <input type="text" name="room"></input> <br>
+        	Check-In <input type="date" name="checkin"></input> <br> <br>
+        	Check-Out <input type="date" name="checkout"></input> <br> <br>
+        	Pacchetto <input type="text" name="package"></input> <br> <br>
+		<input name="ConfirmEditReservation" type="submit" value="Conferma Modifica Prenotazione"></input> <br>
+		</form>
+</div>
+
+<div id="errorDiv" style="color:red">
+</div>
+
 	
 
 <script>
 
 $(document).ready(function() {
-	$("#AddPrenotation").click(
+	$("#AddReservation").click(
 			function() {
-				var op = $(".invisibleDiv").css("opacity");
-				if ( op == 0){ //
-					$(".invisibleDiv").css("opacity","1");
-					$("#AddPrenotation").html("Annulla");
+				let element = document.getElementById("invisibleDiv1");
+				var op = element.getAttribute("hidden");
+				//op può avere valore "hidden" oppure "null"
+				//se l'attributo è hidden, rimuovilo così che il form venga mostrato
+				//se l'attributo è null, allora aggiungi hidden così che il forma venga tolto
+				if ( op == "hidden"){ //
+					element.removeAttribute("hidden");
+					$("#AddReservation").html("Annulla");
 				}else{
-					$(".invisibleDiv").css("opacity","0");
-					$("#AddPrenotation").html("Aggiungi prenotazione");
+					element.setAttribute("hidden","hidden");
+					$("#AddReservation").html("Aggiungi prenotazione");
 				}
 			}
 	)
 });	
+
+var trId = 0;
+$(document).ready(function() {
+	$("#EditReservation").click(
+			function() {
+				$(".highlight").each( function() {
+					let iterId = $(this).attr("id");
+					let element = document.getElementById(iterId);
+					let styles = getComputedStyle(document.getElementById(iterId));
+					let bgColor = styles.getPropertyValue("background-color");
+					if ( bgColor == "rgb(255, 255, 153)"  ){
+						console.log("Trovato elemento colorato");
+						trId = $(this).attr("id");
+					}
+					
+				});
+				console.log("trId: " + trId);
+				let element = document.getElementById("invisibleDiv2");
+				if ( trId != 0){
+					$("Stai modificando la prenotazione selezionata in giallo").appendTo("#errorDiv");
+				}else {
+					$("<p id='error1'>Devi prima selezionare una prenotazione da modificare</p>").appendTo("#errorDiv");
+					return;
+				}
+				var op = element.getAttribute("hidden");
+				if ( op == "hidden"){ 
+					element.removeAttribute("hidden");
+					$("#EditReservation").html("Annulla");
+				}else{
+					element.setAttribute("hidden","hidden");
+					$("#EditReservation").html("Modifica prenotazione");
+				}
+			}
+	)
+});	
+
+$(document).ready(function() {
+			$(".highlight").click(
+					function(event){
+						var id = $(this).attr("id");
+						$(".highlight").css("background-color","rgba(0, 0, 0, 0)");
+						$(this).css('background-color','#ffff99');
+						$("#error1").remove();
+						AddValue(id);
+						
+					}
+			)
+		});
+
+       function AddValue(x) {
+           $.post( //manda messaggio al servlet EmployeeManagement
+               "ReservationManagement", 
+              {AddValue : x},  null 
+              )
+   	};
+   	
+$(document).ready(function() {
+	$("#DeleteReservation").click(
+			function(event){
+				var res = confirm("Sei sicuro di eliminare la prenotazione selezionata?");
+				if (res == true){
+					$.post("ReservationManagement", {DeleteReservation: "DeleteReservation"}, null);
+					setTimeout(function() {
+						location.replace("ReservationManagement");
+					}, 0800);
+				}		
+			}
+	)
+});
 </script>
 
 </body>

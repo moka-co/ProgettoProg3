@@ -14,9 +14,10 @@ import java.util.ArrayList;
 /**
  * Servlet implementation class ReservationManagement
  */
+
 public class ReservationManagement extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -33,7 +34,9 @@ public class ReservationManagement extends HttpServlet {
 		response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Credentials", "true");
 		
-        
+        CacheSingleton cache = CacheSingleton.getInstance();
+		cache.setSingleValue(-1);
+		
         ArrayList<Reservation> rlist = null;
         
         Cookie [] cookies = request.getCookies(); 
@@ -66,8 +69,14 @@ public class ReservationManagement extends HttpServlet {
 		//doGet(request, response);
 		HttpSession session=request.getSession();
 		
-		if ( request.getParameter("ConfirmAddReservation") != null) {
-			System.out.println(request.getParameter("ConfirmAddReservation"));
+		if ( request.getParameter("AddValue") != null) { //Si attiva quando si clicca su un elemento della tabella
+			int value = Integer.valueOf(request.getParameter("AddValue"));
+			CacheSingleton cache = CacheSingleton.getInstance();
+			cache.setSingleValue(value);
+			
+		}
+		
+		if ( request.getParameter("ConfirmAddReservation") != null) { //Si attiva quando si preme il bottone che conferma l'inserimento dati
 			String name = request.getParameter("name");
 			String room = request.getParameter("room");
 			String checkin = request.getParameter("checkin");
@@ -79,6 +88,7 @@ public class ReservationManagement extends HttpServlet {
 			
 			if ( name == null || room == null || checkin == null || checkout == null) {
 				System.out.println("Error");
+				doGet(request,response);
 				return;
 			}
 			
@@ -93,8 +103,30 @@ public class ReservationManagement extends HttpServlet {
 				session.setAttribute("ResultAddEmployee","no");
 			}
 			
+			db.disconnect();
 			//response.sendRedirect("/hoppin/EmployeeManagement.jsp");
 			doGet(request, response);
+		}
+		
+		if ( request.getParameter("DeleteReservation") != null) {
+			MySQLConnect db = new MySQLConnect();
+			CacheSingleton cache = CacheSingleton.getInstance();
+			db.deleteReservation(cache.getSingleValue());
+			cache.setSingleValue(-1);
+		}
+		
+		if ( request.getParameter("ConfirmEditReservation") != null ) {
+			MySQLConnect db = new MySQLConnect();
+			CacheSingleton cache = CacheSingleton.getInstance();
+			String name = request.getParameter("name");
+			String room = request.getParameter("room");
+			String checkin = request.getParameter("checkin");
+			String checkout = request.getParameter("checkout");
+			String pckg = request.getParameter("package");
+			Reservation newReservation = new Reservation(name, cache.getSingleValue(), room, checkin, checkout, pckg);
+			db.editReservation(newReservation);
+			
+			doGet(request,response);
 		}
 	}
 

@@ -199,7 +199,7 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 			
 			StringBuilder sb = new StringBuilder();
 			String qistart = "( "; //Query Incognites Start
-			String qiend = " )"; //QUery Icognites End
+			String qiend = " )"; //QUery Incognites End
 			String strep =" ?"; //String To Repeat 
 			sb.append(qistart);
 			for (int i=0; i<size; i++) {
@@ -312,6 +312,85 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 			return true;
 			
 		} catch (SQLException e) {
+			System.out.println(e);
+			return false;
+		}
+	}
+	
+	public boolean deleteReservation(int id) {
+		try {
+		PreparedStatement pss = conn.prepareStatement("delete from Reservation where id = ? ");
+		pss.setInt(1, id);
+		boolean res = pss.execute();
+		return true;
+		} catch ( SQLException e) {
+			System.out.println(e);
+			return false;
+		}
+	}
+	
+	public boolean editReservation(Reservation res) {
+		DateTimeFormatter oformat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		DateTimeFormatter nformat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		LocalDate Datecheckin = null;
+		LocalDate Datecheckout = null;
+		
+		try {
+			StringBuilder sb = new StringBuilder();
+	
+			sb.append("UPDATE Reservation SET ");
+			if ( res.getRoomNum() != "") {
+				System.out.println("passato res.getRoomNum(): " + res.getRoomNum());
+				sb.append("roomNum = ?, ");
+			}
+			if ( res.getCheckIn() != "") {
+				sb.append("checkIn = STR_TO_DATE(? , '%d-%m-%Y'), ");
+				Datecheckin = LocalDate.parse(res.getCheckIn(),oformat);
+			}
+			
+			if ( res.getCheckOut() != "") {
+				sb.append("checkOut = STR_TO_DATE(? , '%d-%m-%Y')");
+				Datecheckout = LocalDate.parse(res.getCheckOut(),oformat);
+			}
+			
+			if ( res.getPckg() != "") {
+				sb.append("Package = ?");
+			}
+			sb.append(" WHERE id = ?");
+			String psQuery = sb.toString(); //ps = PreparedStatement
+			System.out.println("Stringa costruita: " + psQuery);
+			
+			PreparedStatement pss = conn.prepareStatement(psQuery);
+			
+			int pstack = 1;
+			if ( res.getRoomNum() != "") {
+				pss.setString(pstack, res.getRoomNum());
+				pstack++;
+			}
+			if ( res.getCheckIn() != "") {
+				String checkin = Datecheckin.format(nformat).toString();
+				pss.setString(pstack, checkin);
+				pstack++;
+			}
+			
+			if ( res.getCheckOut() != "") {
+				String checkout = Datecheckout.format(nformat).toString();
+				pss.setString(pstack, checkout);
+				pstack++;
+			}
+			if ( res.getPckg() != "") {
+				pss.setString(pstack, res.getPckg());
+				pstack++;
+			}
+			
+			pss.setInt(pstack, res.getId());
+			if ( pstack == 1)
+				return false;
+			
+			int queryResult = pss.executeUpdate();
+			
+			return true;
+		} catch ( SQLException e) {
 			System.out.println(e);
 			return false;
 		}

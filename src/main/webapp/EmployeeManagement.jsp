@@ -79,18 +79,16 @@ td, th {
  $(document).ready(function() {
         $(".highlight").click(function(event) {
         	var id = $(this).attr("id");
-        	var pippo = $(this).css('background-color');
-        	if ( pippo == 'rgba(0, 0, 0, 0)' ){
+        	var backColor = $(this).css('background-color');
+        	if ( backColor == 'rgba(0, 0, 0, 0)' ){
         		$(this).css('background-color','#ffff99');
         		AddId(id);
         	}
         	
-        	if ( pippo == 'rgb(255, 255, 153)' ){
+        	if ( backColor == 'rgb(255, 255, 153)' ){
         		$(this).css('background-color','rgba(0, 0, 0, 0)');
         		RemoveId(id);
         		}
-        	//if ( $(this).css('background-color') == '#dddddd')
-        	//		$(this).css('background-color','#ffff99');
         });
 
  });
@@ -114,7 +112,7 @@ $(document).ready(function() {
 			$.post("EmployeeManagement", {DeleteEmployee: "DeleteEmployee"}, null);
 			setTimeout(function() {
 				location.replace("EmployeeManagement");
-			}, 1000);
+			}, 0800);
 		}
 	}
 			);

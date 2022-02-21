@@ -5,7 +5,7 @@ import java.util.List;
 
 public class CacheSingleton {
 	private static CacheSingleton id = null;
-	private int value;
+	private int singleValue;
 	private List<Integer> values;
 	
 	public CacheSingleton() {
@@ -55,5 +55,8 @@ public class CacheSingleton {
 			values.remove((Integer)x);
 		}
 	}
+	
+	public void setSingleValue(int x) { this.singleValue = x; }
+	public int getSingleValue() {return this.singleValue; }
 
 }
