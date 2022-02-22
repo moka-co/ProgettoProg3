@@ -99,7 +99,8 @@ create table stagione
 
     -- chiave esterna
     Hotel varchar(20),
-    CONSTRAINT FK_stagione_prezziario FOREIGN KEY(hotel) REFERENCES hotel (name)
+    CONSTRAINT FK_stagione_hotel FOREIGN KEY(hotel) REFERENCES hotel (name),
+    CONSTRAINT PK_stagione PRIMARY Key(start,end,hotel)
   );
 
   create table documenti_memorizzati
