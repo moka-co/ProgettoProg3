@@ -25,11 +25,11 @@ SET time_zone = "+00:00";
 -- Dump dei dati per la tabella `cliente`
 --
 
-INSERT INTO `cliente` (`id`, `completeName`, `email`, `passw_hash`, `sid`) VALUES
-(1, 'Mario Rossi', 'mario.rossi@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', NULL),
-(4, 'Sara Rossi', 'sara.rossi@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', NULL),
-(5, 'Sara Chiaglio', 'sara.chiaglio@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', NULL),
-(6, 'Mia Chiaglio', 'mia.chiaglio@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', NULL);
+INSERT INTO `cliente` (`id`, `completeName`, `email`, `passw_hash`) VALUES
+(1, 'Mario Rossi', 'mario.rossi@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2'),
+(4, 'Sara Rossi', 'sara.rossi@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2'),
+(5, 'Sara Chiaglio', 'sara.chiaglio@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2'),
+(6, 'Mia Chiaglio', 'mia.chiaglio@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2');
 
 --
 -- Dump dei dati per la tabella `dipendente`
