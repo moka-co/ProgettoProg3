@@ -56,7 +56,17 @@ CREATE TABLE room (
 
 
 
-CREATE TABLE Users (
+CREATE TABLE Cliente (
+  id int NOT NULL AUTO_INCREMENT,
+  completeName varchar(255) NOT NULL,
+  email varchar(255) NOT NULL,
+  passw_hash varchar(255) NOT NULL,
+  sid int,
+  PRIMARY KEY (id)
+);
+
+
+CREATE TABLE Dipendente (
   id int NOT NULL AUTO_INCREMENT,
   completeName varchar(255) NOT NULL,
   email varchar(255) NOT NULL,
@@ -65,7 +75,6 @@ CREATE TABLE Users (
   sid int,
   PRIMARY KEY (id)
 );
-
 
 
 CREATE TABLE documenti (
@@ -117,7 +126,7 @@ create table stagione
 
 
 alter table hotel add OwnerId int,
-add CONSTRAINT FK_Hotel_Users FOREIGN KEY(OwnerId) REFERENCES users (id);
+add CONSTRAINT FK_Hotel_Dipendente FOREIGN KEY(OwnerId) REFERENCES Dipendente (id);
 
 
 
@@ -132,7 +141,7 @@ add N_Card varchar(20) ,
 add Hotel varchar(20),
 add CONSTRAINT FK_prenota_pagamenti FOREIGN KEY (N_Card) REFERENCES paymenttransaction (N_Card),
 add CONSTRAINT FK_prenota_room FOREIGN KEY (Hotel,Number) REFERENCES room (Hotel,Number),
-add CONSTRAINT FK_prenota_user FOREIGN KEY (id_user) REFERENCES users (id);
+add CONSTRAINT FK_prenota_cliente FOREIGN KEY (id_user) REFERENCES cliente (id);
 
 alter table prenota add numero_documento varchar(20),
 add CONSTRAINT FK_prenota_documenti FOREIGN KEY(numero_documento) REFERENCES documenti (number);
@@ -156,25 +165,12 @@ add CONSTRAINT FK_Package_Hotel FOREIGN KEY (Hotel) REFERENCES hotel (Name);
 
 
 
-DELIMITER |
-create TRIGGER Encypt_password
-BEFORE INSERT on users
-FOR EACH ROW
-BEGIN
-set new.passw_hash=md5(new.passw_hash);
-END
-
-| DELIMITER
 
 
-
-
-
-
+/*
 INSERT INTO `hotel` (`Name`, `Via`, `City`, `Postcode`, `Stars`, `Balance`, `description`, `OwnerId`) VALUES
 ('Hotel Belvedere ', 'Toledo,22', 'Napoli', '80234', 4, NULL, NULL, NULL),
 ('Hotel Hoppo', 'Gramsci, 33', 'Roma', '1234', 5, NULL, NULL, NULL),
-('Hotel Quattro Stagio', 'Gramsci, 33', 'Roma', '1234', 5, NULL, NULL, NULL);
 INSERT INTO `room` (`Number`, `Type`, `Hotel`) VALUES
 (1, 'Singola', 'Hotel Belvedere '),
 (2, 'Matrimoniale', 'Hotel Belvedere '),
@@ -184,17 +180,16 @@ INSERT INTO `room` (`Number`, `Type`, `Hotel`) VALUES
 (2, 'Matrimoniale', 'Hotel Hoppo '),
 (3, 'Tripla', 'Hotel Hoppo '),
 (4, 'Quadrupla', 'Hotel Hoppo '),
-(1, 'Singola', 'Hotel Quattro Stagio'),
-(2, 'Matrimoniale', 'Hotel Quattro Stagio'),
-(3, 'Tripla', 'Hotel Quattro Stagio'),
-(4, 'Quadrupla', 'Hotel Quattro Stagio');
 
-INSERT INTO `users` (`id`, `completeName`, `email`, `passw_hash`, `accType`, `sid`) VALUES
-(1, 'Mario Rossi', 'mario.rossi@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', 'Cliente', NULL),
+INSERT INTO `Cliente` (`id`, `completeName`, `email`, `passw_hash`, `sid`) VALUES
+(1, 'Mario Rossi', 'mario.rossi@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', NULL),
+(4, 'Sara Rossi', 'sara.rossi@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', NULL),
+(5, 'Sara Chiaglio', 'sara.chiaglio@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', NULL),
+(6, 'Mia Chiaglio', 'mia.chiaglio@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', NULL);
+
+INSERT INTO `Dipendente` (`id`, `completeName`, `email`, `passw_hash`, `accType`, `sid`) VALUES
 (2, 'Mario Tortora', 'mario.tortora@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', 'Dipendente', NULL),
 (3, 'Raffaele Tortora', 'raffaele.tortora@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', 'Proprietario', NULL),
-(4, 'Sara Rossi', 'sara.rossi@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', 'Cliente', NULL),
-(5, 'Sara Chiaglio', 'sara.chiaglio@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', 'Cliente', NULL),
-(6, 'Mia Chiaglio', 'mia.chiaglio@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', 'Cliente', NULL),
 (7, 'Raffaella Vano', 'raffella.vano@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', 'Dipendente', NULL),
 (8, 'Raffaella Vart', 'raffella.vano@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', 'Proprietario', NULL);
+*/
