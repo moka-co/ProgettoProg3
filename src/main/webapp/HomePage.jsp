@@ -27,6 +27,7 @@ for (Cookie aCookie : cookies) {
 		if ( name.equals("id")){
 			MySQLConnect db = new MySQLConnect();
 			Firstname = db.getNamebyId(i);
+			db.disconnect();
 		
 		}
 	}
@@ -35,11 +36,21 @@ for (Cookie aCookie : cookies) {
 
 <h2>Benvenuto <% out.print(Firstname); %></h2>
 
-<button type="button">Clicca qui per vedere la parte economica dell'Hotel</button>
-<br> <br>
-<button onclick="window.location='EmployeeManagement';" value="employeeManagement">Clicca qui per gestire l'account dei tuoi dipendenti</button>
-<br> <br>
-<button onclick="window.location='ReservationManagement'" value="reservationManagement">Clicca qui per gestire le prenotazioni al tuo hotel</button>
+<div>
+	"Immagine Hotel" <br>
+	"Descrizione Hotel" <br>
+	<br>
+</div>
+<br>
+<div>
+	<button onclick="window.location='FinanceManagement';" type="button">Clicca qui per vedere la parte economica dell'Hotel</button>
+	<br> <br>
+	<button onclick="window.location='EmployeeManagement';" value="employeeManagement">Clicca qui per gestire l'account dei tuoi dipendenti</button>
+	<br> <br>
+	<button onclick="window.location='ReservationManagement'" value="reservationManagement">Clicca qui per gestire le prenotazioni al tuo hotel</button>
+	<br> <br>
+	<button onclick="window.location='PackagesManagement'" value="reservationManagement">Clicca qui per gestire i pacchetti del tuo Hotel</button>
+</div>
 
 </body>
 
