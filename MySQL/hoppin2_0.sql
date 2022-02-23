@@ -61,7 +61,6 @@ CREATE TABLE Cliente (
   completeName varchar(255) NOT NULL,
   email varchar(255) NOT NULL,
   passw_hash varchar(255) NOT NULL,
-  sid int,
   PRIMARY KEY (id)
 );
 
