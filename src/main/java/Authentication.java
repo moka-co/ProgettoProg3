@@ -44,33 +44,9 @@ public class Authentication extends HttpServlet {
 		
 		// response.getWriter().append("Served at: ").append(request.getContextPath());
 
-		Connection conn = null;
-		String passw = "anoncorno";
-		String user ="kurush";
-		try {
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/hoppin", user, passw); //Establishing connection
-		} catch (SQLException e) {
-			System.out.println(e);
-			System.out.println("Error while connecting to the database");
-		}
-		
-		out = response.getOutputStream();
 		gui = new AuthenticationGUI(out);
 		
-		int x = save.getValue();
-		//System.out.println(x);
-		//Da rifattorizzare perché questa parte va messa in AuthenticationGUI
-		switch(x) {
-		case 0:
-			gui.base();
-			break;
-		case 1:
-			gui.badCredentials();
-			break;		
-		case 2:
-			gui.registerSuccess();
-			break;
-		}
+		response.sendRedirect("/hoppin/Index.jsp");
 		save.setValue(0);
 
 	}
