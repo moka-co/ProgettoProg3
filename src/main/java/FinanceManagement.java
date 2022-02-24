@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import hoppin.MySQLConnect;
+import hoppin.PriceList;
 
 /**
  * Servlet implementation class FinanceManagement
@@ -45,11 +46,13 @@ public class FinanceManagement extends HttpServlet {
 		}
 		MySQLConnect db = new MySQLConnect();
 		ArrayList<Integer> params = db.getTotProfit(id); //params = parametri
+		ArrayList<PriceList> pricelist = db.getPriceList(id);
 		db.disconnect();
 		
 		HttpSession session=request.getSession();
 		session.setAttribute("sumAllPrice", params.get(0));
 		session.setAttribute("allReservation", params.get(1));
+		session.setAttribute("pricelist", pricelist);
 		
 		db.disconnect();
 		response.sendRedirect("/hoppin/FinanceManagement.jsp");
@@ -61,7 +64,12 @@ public class FinanceManagement extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		String arti= request.getParameter("AddRoomTypeId"); //arti = Add Room Type Id
+		if ( arti != null) {
+			
+		}
+		
+		//doGet(request, response);
 	}
 
 }
