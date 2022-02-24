@@ -9,6 +9,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import hoppin.*;
@@ -40,6 +44,15 @@ public class Authentication extends HttpServlet {
 		
 		// response.getWriter().append("Served at: ").append(request.getContextPath());
 
+		Connection conn = null;
+		String passw = "anoncorno";
+		String user ="kurush";
+		try {
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/hoppin", user, passw); //Establishing connection
+		} catch (SQLException e) {
+			System.out.println(e);
+			System.out.println("Error while connecting to the database");
+		}
 		
 		out = response.getOutputStream();
 		gui = new AuthenticationGUI(out);
@@ -105,7 +118,7 @@ public class Authentication extends HttpServlet {
 				String cookiePath = request.getContextPath();
 				biscotto.setPath(cookiePath);
 				biscotto.setComment(comment);
-				biscotto.setDomain("aaaa");
+				biscotto.setDomain("localhost");
 				biscotto.setMaxAge(600);
 				response.addCookie(biscotto);
 				
@@ -113,7 +126,7 @@ public class Authentication extends HttpServlet {
 				
 				Cookie dataCookie = new Cookie("id",Integer.toString(id));
 				dataCookie.setMaxAge(600);
-				dataCookie.setDomain("aaaa");
+				dataCookie.setDomain("localhost");
 				response.addCookie(dataCookie);
 				
 				response.sendRedirect("/hoppin/HomePage.jsp");

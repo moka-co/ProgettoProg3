@@ -143,7 +143,7 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 			psi.setString(4, passw);
 			psi.setString(5, "Customer");
 			psi.setInt(6, id);
-			boolean res = psi.execute();
+			psi.execute();
 			return true;
 			
 		} catch (SQLException e) {
@@ -308,7 +308,7 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 			psi.setString(5, checkin);
 			psi.setString(6, checkout);
 			psi.setString(7, pckg);
-			boolean res = psi.execute();
+			psi.execute();
 			return true;
 			
 		} catch (SQLException e) {
@@ -321,7 +321,7 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 		try {
 		PreparedStatement pss = conn.prepareStatement("delete from Reservation where id = ? ");
 		pss.setInt(1, id);
-		boolean res = pss.execute();
+		pss.execute();
 		return true;
 		} catch ( SQLException e) {
 			System.out.println(e);
@@ -387,13 +387,64 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 			if ( pstack == 1)
 				return false;
 			
-			int queryResult = pss.executeUpdate();
+			pss.executeUpdate();
 			
 			return true;
 		} catch ( SQLException e) {
 			System.out.println(e);
 			return false;
 		}
+	}
+	
+	public ArrayList<Integer> getTotProfit(int id) {
+		PreparedStatement ps;
+		//ResultSet rs;
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		
+		try {
+			//Check Account Type
+			String AccType = "";
+			String HotelName ="";
+			ResultSet rs;
+			ps = conn.prepareStatement("select accType from User where id = ?");
+			ps.setInt(1, id);
+			rs = ps.executeQuery();
+			rs.next();
+			AccType = rs.getString("accType");
+			
+			// Get Hotel Name
+			
+			ps = conn.prepareStatement("select Name from Hotel where OwnerId = ?");
+			ps.setInt(1, id);
+			rs = ps.executeQuery();
+			rs.next();
+			HotelName = rs.getString("Name");
+			
+			
+			//Query per prendere la somma del prezzo totale di ogni prenotazione e il numero di prenotazioni
+			ps = conn.prepareStatement(" select sum(PriceList.Price) as sumPrice, count(Reservation.id) as totCount"
+					+ "	from Reservation"
+					+ "		INNER JOIN Room ON Room.Num = Reservation.RoomNum"
+					+ "		INNER JOIN PriceList ON Room.Type=PriceList.RoomType"
+					+ "		WHERE Reservation.HotelName= ? ;"
+					);
+			ps.setString(1, HotelName);
+			rs = ps.executeQuery();
+			rs.next();
+			int sumPrice = rs.getInt("sumPrice");
+			int totCount = rs.getInt("totCount");
+			
+			//Aggiungi gli elementi trovati dalla Query all'array
+			res.add(sumPrice);
+			res.add(totCount);
+			
+			
+		}catch ( SQLException e) {
+			System.out.println(e);
+			res.add(-1); res.add(-1);
+		}
+		
+		return res;
 	}
 	
 	
