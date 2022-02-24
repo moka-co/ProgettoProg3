@@ -108,6 +108,52 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 		return completeName;
 	}
 	
+	public String getAccTypeById(int id) { //Questo metodo è richiamato da più metodi di questa classe
+        String AccType="";
+       
+        try {
+        PreparedStatement ps = conn.prepareStatement("select accType from User where id = ?");
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        if (rs.getString("accType") != null) {
+            AccType = rs.getString("accType");
+        }
+       
+        } catch  ( SQLException e) {
+            System.out.println(e);
+        }
+       
+        return AccType;
+    	} 
+	
+	public String getHotelNameById(int id) { //Questo metodo è richiamato da più metodi di questa classe
+        String HotelName = "";
+        try {
+            String AccType = this.getAccTypeById(id);
+            if ( AccType.equals("Owner")) {
+                PreparedStatement ps = conn.prepareStatement("select Name from Hotel where OwnerId = ?");
+                ps.setInt(1, id);
+                ResultSet rs = ps.executeQuery();
+                rs.next();
+                HotelName = rs.getString("Name");
+               
+            }else if (AccType.equals("Employee")) {
+                PreparedStatement ps = conn.prepareStatement("select Name from Hotel where OwnerId = (select sid from User where id = ?) ");
+                ps.setInt(1, id);
+                ResultSet rs = ps.executeQuery();
+                rs.next();
+                HotelName = rs.getString("Name");
+            }
+           
+        }catch (SQLException e) {
+            System.out.println(e);
+        }
+       
+        return HotelName;
+    }
+	
+	
 	public List<String> getNEmployeeList(int i){ //Funzione da cancellare, utile solo come riferimento
 		List<String> list = new ArrayList<String>();
 		try {
