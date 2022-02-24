@@ -452,20 +452,8 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 			String AccType = "";
 			String HotelName ="";
 			ResultSet rs;
-			ps = conn.prepareStatement("select accType from User where id = ?");
-			ps.setInt(1, id);
-			rs = ps.executeQuery();
-			rs.next();
-			AccType = rs.getString("accType");
 			
-			// Get Hotel Name
-			
-			ps = conn.prepareStatement("select Name from Hotel where OwnerId = ?");
-			ps.setInt(1, id);
-			rs = ps.executeQuery();
-			rs.next();
-			HotelName = rs.getString("Name");
-			
+			HotelName = this.getHotelNameById(id);			
 			
 			//Query per prendere la somma del prezzo totale di ogni prenotazione e il numero di prenotazioni
 			ps = conn.prepareStatement(" select sum(PriceList.Price) as sumPrice, count(Reservation.id) as totCount"
@@ -493,7 +481,69 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 		return res;
 	}
 	
+	public ArrayList<Package> GetPackageList(int i){
+		ArrayList<Package> PackageList = new ArrayList<Package>();
 	
+		try {
+			
+			PreparedStatement psi = conn.prepareStatement("select sid from User where id = ? ");
+			int idprop;
+			String Hname;
+			psi.setInt(1,i);
+			
+			ResultSet Rs = psi.executeQuery();
+			Rs.next();
+			
+			idprop = Rs.getInt("sid");
+			psi = conn.prepareStatement("select Name from Hotel where OwnerId = ?");
+			psi.setInt(1, i);
+			
+			Rs = psi.executeQuery();
+			Rs.next();
+			Hname = Rs.getString("Name");
+			
+			psi = conn.prepareStatement("select * from Package where Hotel = ? ");
+			psi.setString(1, Hname);
+			Rs = psi.executeQuery();
+			
+			while(Rs.next()) {
+				
+				String 	PackName = Rs.getString("name");			
+				String 	PackDes = Rs.getString("description");
+				String 	PackHotel = Rs.getString("Hotel");
+				int	PackPrice = Rs.getInt("price");
+				
+				Package pack = new Package(PackName,PackDes,PackHotel,PackPrice);
+				
+				PackageList.add(pack);
+			}
+			
+			
+		}catch(SQLException e){
+			System.out.println(e);
+			return null;
+		}
+		
+		return PackageList;
+	}
+	
+	public void AddPackage(int id,String NPack,String DPack,int PPack) {
+	
+	try {
+		String Hname = this.getHotelNameById(id);
+		PreparedStatement psi =conn.prepareStatement("insert into package (name, price, description, hotel) values (? ,? ,? ,?) ");
+		psi.setString(1, NPack);
+		psi.setInt(2, PPack);
+		psi.setString(3, DPack);
+		psi.setString(4, Hname);
+	
+		psi.execute();
+		
+	}catch(SQLException e){
+		System.out.println(e);
+	}
+	
+}
 }
 
 
