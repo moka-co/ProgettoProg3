@@ -546,6 +546,29 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 	}
 	
 }
+	
+	public ArrayList<PriceList> getPriceList(int id){ //PriceList = prezziario
+        ArrayList<PriceList> al = new ArrayList<PriceList>(); //al = array list
+       
+        try {
+            String HotelName = this.getHotelNameById(id);
+            PreparedStatement ps = conn.prepareStatement("select RoomType, Price from PriceList where Hotel = ?");
+            ps.setString(1, HotelName);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String RoomType = rs.getString("RoomType");
+                int price = rs.getInt("Price");
+                PriceList pl = new PriceList(RoomType,price);
+                al.add(pl);
+            }
+           
+        } catch ( SQLException e) {
+            System.out.println(e);
+           
+        }
+       
+        return al;
+    }
 }
 
 
