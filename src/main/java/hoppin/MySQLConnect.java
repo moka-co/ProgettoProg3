@@ -43,14 +43,13 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 		
 			if ( rs.next() == false) {
 				return false;
-			}else {
-				return true;
 			}
 			
 		} catch (SQLException e) { //e = Exception
 			System.out.println(e);
 			return false;
 		}
+		return true;
 	}
 	
 	public boolean register(String name, String email, String passw) {
