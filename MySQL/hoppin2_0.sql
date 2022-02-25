@@ -41,6 +41,7 @@ CREATE TABLE Reservation (
   Check_out date ,
   Package varchar(20) ,
   Tassa_Soggiorno float,
+  Name varchar(255),
 
   PRIMARY KEY (id)
 );
@@ -115,8 +116,8 @@ create table Season
     (
     numero_documento varchar(20),
     id_prenota int,
-    CONSTRAINT fk_documentiMemorizzati_documenti FOREIGN KEY(numero_documento) REFERENCES documenti(number),
-    CONSTRAINT fk_documentiMemorizzati_prenotazione FOREIGN KEY(id_prenota) REFERENCES prenota(id)
+    CONSTRAINT fk_documentiMemorizzati_documenti FOREIGN KEY(numero_documento) REFERENCES documents(number),
+    CONSTRAINT fk_documentiMemorizzati_prenotazione FOREIGN KEY(id_prenota) REFERENCES reservation(id)
     );
 
 
@@ -125,7 +126,7 @@ create table Season
 
 
 alter table Hotel add OwnerId int,
-add CONSTRAINT FK_Hotel_Dipendente FOREIGN KEY(OwnerId) REFERENCES Dipendente (id);
+add CONSTRAINT FK_Hotel_Dipendente FOREIGN KEY(OwnerId) REFERENCES Employee (id);
 
 
 
@@ -137,10 +138,10 @@ add CONSTRAINT FK_Hotel FOREIGN Key(Hotel) REFERENCES Hotel(Name);
 alter table Reservation add Name int NOT NULL,
 add Number int,
 add N_Card varchar(20) ,
-add Hotel varchar(20) NOT NULL,
+add Hotel varchar(20),
 add CONSTRAINT FK_prenota_pagamenti FOREIGN KEY (N_Card) REFERENCES paymentTransaction (N_Card),
 add CONSTRAINT FK_prenota_room FOREIGN KEY (Hotel,Number) REFERENCES room (Hotel,Number),
-add CONSTRAINT FK_prenota_cliente FOREIGN KEY (Name) REFERENCES cliente (completeName);
+add CONSTRAINT FK_prenota_cliente FOREIGN KEY (Name) REFERENCES customer (completeName);
 
 alter table Reservation add DocumentNumber varchar(20),
 add CONSTRAINT FK_prenota_documenti FOREIGN KEY(DocumentNumber) REFERENCES Documents (number);
