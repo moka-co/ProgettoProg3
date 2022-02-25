@@ -33,9 +33,12 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 		try {
 			// ps = PreparedStatement
 			// rs = ResultSet
-			PreparedStatement ps = conn.prepareStatement("select id from User where email = ? and passw_hash = ?");
+			PreparedStatement ps = conn.prepareStatement(" select id from  Employee where email = ? and passw_hash = md5(?)  UNION select id from  Customer where email = ? and passw_hash = md5(?)");
+			
 			ps.setString(1, user);
 			ps.setString(2, passw);
+			ps.setString(3, user);
+			ps.setString(4, passw);
 			ResultSet rs = ps.executeQuery();
 		
 			if ( rs.next() == false) {
