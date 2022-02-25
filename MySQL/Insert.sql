@@ -25,7 +25,7 @@ SET time_zone = "+00:00";
 -- Dump dei dati per la tabella `cliente`
 --
 
-INSERT INTO `cliente` (`id`, `completeName`, `email`, `passw_hash`) VALUES
+INSERT INTO Customer (id, completeName, email, passw_hash) VALUES
 (1, 'Mario Rossi', 'mario.rossi@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2'),
 (4, 'Sara Rossi', 'sara.rossi@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2'),
 (5, 'Sara Chiaglio', 'sara.chiaglio@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2'),
@@ -35,7 +35,7 @@ INSERT INTO `cliente` (`id`, `completeName`, `email`, `passw_hash`) VALUES
 -- Dump dei dati per la tabella `dipendente`
 --
 
-INSERT INTO `dipendente` (`id`, `completeName`, `email`, `passw_hash`, `accType`, `sid`) VALUES
+INSERT INTO Employee (id, completeName, email, passw_hash, accType, sid) VALUES
 (2, 'Mario Tortora', 'mario.tortora@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', 'Dipendente', NULL),
 (3, 'Raffaele Tortora', 'raffaele.tortora@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', 'Proprietario', NULL),
 (7, 'Raffaella Vano', 'raffella.vano@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', 'Dipendente', NULL),
@@ -45,7 +45,7 @@ INSERT INTO `dipendente` (`id`, `completeName`, `email`, `passw_hash`, `accType`
 -- Dump dei dati per la tabella `hotel`
 --
 
-INSERT INTO `hotel` (`Name`, `Via`, `City`, `Postcode`, `Stars`, `Balance`, `description`, `OwnerId`) VALUES
+INSERT INTO Hotel (Name, Via, City, Postcode, Stars, Balance, description, OwnerId) VALUES
 ('Hotel Belvedere', 'Toledo,22', 'Napoli', '80234', 4, NULL, NULL, NULL),
 ('Hotel Hoppo', 'Gramsci, 33', 'Roma', '1234', 5, NULL, NULL, NULL);
 
@@ -53,7 +53,7 @@ INSERT INTO `hotel` (`Name`, `Via`, `City`, `Postcode`, `Stars`, `Balance`, `des
 -- Dump dei dati per la tabella `package`
 --
 
-INSERT INTO `package` (`name`, `price`, `description`, `Hotel`) VALUES
+INSERT INTO Package (name, price, description, Hotel) VALUES
 ('Base', NULL, NULL, 'Hotel Belvedere'),
 ('Gold', 50, NULL, 'Hotel Belvedere'),
 ('Silver', 35, NULL, 'Hotel Belvedere'),
@@ -65,7 +65,7 @@ INSERT INTO `package` (`name`, `price`, `description`, `Hotel`) VALUES
 -- Dump dei dati per la tabella `prezziario`
 --
 
-INSERT INTO `prezziario` (`type_room`, `price`, `hotel`) VALUES
+INSERT INTO PriceList (Type_room, price, hotel) VALUES
 ('Matrimoniale', 100, 'Hotel Belvedere'),
 ('Quadrupla', 220, 'Hotel Belvedere'),
 ('Singola', 70, 'Hotel Belvedere'),
@@ -79,7 +79,7 @@ INSERT INTO `prezziario` (`type_room`, `price`, `hotel`) VALUES
 -- Dump dei dati per la tabella `room`
 --
 
-INSERT INTO `room` (`Number`, `Type`, `Hotel`) VALUES
+INSERT INTO Room (Number, Type, Hotel) VALUES
 (1, 'Singola', 'Hotel Belvedere'),
 (2, 'Matrimoniale', 'Hotel Belvedere'),
 (3, 'Tripla', 'Hotel Belvedere'),
@@ -93,7 +93,7 @@ INSERT INTO `room` (`Number`, `Type`, `Hotel`) VALUES
 -- Dump dei dati per la tabella `stagione`
 --
 
-INSERT INTO `stagione` (`type`, `start`, `end`, `aumento_percentuale`, `Hotel`) VALUES
+INSERT INTO Season (type, start, end, aumento_percentuale, Hotel) VALUES
 ('Bassa stagione', '2022-06-01', '2022-06-30', 20, 'Hotel Belvedere'),
 ('Bassa stagione', '2022-06-01', '2022-06-30', 20, 'Hotel Hoppo'),
 ('Media Stagione', '2022-07-01', '2022-07-31', 35, 'Hotel Belvedere'),
