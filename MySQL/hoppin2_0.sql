@@ -1,7 +1,7 @@
 -- DROP TABLE `documenti`, `hotel`, `package`, `paymenttransaction`, `prenota`, `room`, `user`;
 
 
-CREATE TABLE package (
+CREATE TABLE Package (
     name varchar(20) ,
     price float,
   description varchar(100)
@@ -10,7 +10,7 @@ CREATE TABLE package (
 
 
 
-CREATE TABLE paymenttransaction (
+CREATE TABLE PaymentTransaction (
   N_Card varchar(20) NOT NULL,
   Name varchar(20) ,
   LastName varchar(20) ,
@@ -20,7 +20,7 @@ CREATE TABLE paymenttransaction (
 
 
 
-CREATE TABLE hotel (
+CREATE TABLE Hotel (
   Name varchar(20),
   Via varchar(255) NOT NULL,
 	City varchar(255) NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE hotel (
 
 
 
-CREATE TABLE prenota (
+CREATE TABLE Reservation (
 
   id int NOT NULL AUTO_INCREMENT,
 
@@ -47,7 +47,7 @@ CREATE TABLE prenota (
 
 
 
-CREATE TABLE room (
+CREATE TABLE Room (
 
   Number int ,
   Type varchar(20)
@@ -56,7 +56,7 @@ CREATE TABLE room (
 
 
 
-CREATE TABLE Cliente (
+CREATE TABLE Customer (
   id int NOT NULL AUTO_INCREMENT,
   completeName varchar(255) NOT NULL,
   email varchar(255) NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE Cliente (
 );
 
 
-CREATE TABLE Dipendente (
+CREATE TABLE Employee (
   id int NOT NULL AUTO_INCREMENT,
   completeName varchar(255) NOT NULL,
   email varchar(255) NOT NULL,
@@ -76,7 +76,7 @@ CREATE TABLE Dipendente (
 );
 
 
-CREATE TABLE documenti (
+CREATE TABLE Documents (
   type varchar(50) ,
   name varchar(50) ,
   LastName varchar(50) ,
@@ -86,7 +86,7 @@ CREATE TABLE documenti (
   PRIMARY KEY (number)
 );
 
-create table prezziario
+create table PriceList
   (type_room varchar(20),
   price float,
 
@@ -98,7 +98,7 @@ create table prezziario
   CONSTRAINT PK_prezziario PRIMARY KEY(hotel,type_room)
   );
 
-create table stagione
+create table Season
   (
     type varchar(20),
     start date,
@@ -111,7 +111,7 @@ create table stagione
     CONSTRAINT PK_stagione PRIMARY Key(start,end,hotel)
   );
 
-  create table documenti_memorizzati
+  create table SavedDocuments
     (
     numero_documento varchar(20),
     id_prenota int,
@@ -124,26 +124,26 @@ create table stagione
 
 
 
-alter table hotel add OwnerId int,
+alter table Hotel add OwnerId int,
 add CONSTRAINT FK_Hotel_Dipendente FOREIGN KEY(OwnerId) REFERENCES Dipendente (id);
 
 
 
-alter table room add Hotel varchar(20),
+alter table Room add Hotel varchar(20),
 add CONSTRAINT PK_Room PRIMARY Key(Hotel,Number),
 add CONSTRAINT FK_Hotel FOREIGN Key(Hotel) REFERENCES Hotel(Name);
 
 
-alter table prenota add id_user int NOT NULL,
+alter table Reservation add Name int NOT NULL,
 add Number int,
 add N_Card varchar(20) ,
-add Hotel varchar(20),
-add CONSTRAINT FK_prenota_pagamenti FOREIGN KEY (N_Card) REFERENCES paymenttransaction (N_Card),
+add Hotel varchar(20) NOT NULL,
+add CONSTRAINT FK_prenota_pagamenti FOREIGN KEY (N_Card) REFERENCES paymentTransaction (N_Card),
 add CONSTRAINT FK_prenota_room FOREIGN KEY (Hotel,Number) REFERENCES room (Hotel,Number),
-add CONSTRAINT FK_prenota_cliente FOREIGN KEY (id_user) REFERENCES cliente (id);
+add CONSTRAINT FK_prenota_cliente FOREIGN KEY (Name) REFERENCES cliente (completeName);
 
-alter table prenota add numero_documento varchar(20),
-add CONSTRAINT FK_prenota_documenti FOREIGN KEY(numero_documento) REFERENCES documenti (number);
+alter table Reservation add DocumentNumber varchar(20),
+add CONSTRAINT FK_prenota_documenti FOREIGN KEY(DocumentNumber) REFERENCES Documents (number);
 
 
 
