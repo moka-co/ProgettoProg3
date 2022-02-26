@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS Reservation(
 	CONSTRAINT RoomNum FOREIGN KEY(RoomNum) REFERENCES Room(Num)
 );
 
-# Esempio popolamento Reservation
+-- Esempio popolamento Reservation
 
 INSERT INTO User (id, completeName, email, passw_hash, accType)
 VALUES (5, "Giovanni Muscolo","giovannimuscolo@libero.it", "strong", "Customer");
@@ -91,6 +91,25 @@ VALUES (5, "Giovanni Muscolo", 1, "Hotel Bello", "101", STR_TO_DATE("20-02-2022"
 
 INSERT INTO Reservation (Customer, CustomerName, id, HotelName, RoomNum, CheckIn, CheckOut, Package)  VALUES 
 (5, "Alessandro Galli", 3, "Hotel Bello", "104", STR_TO_DATE('20-02-2022', "%d-%m-%Y"), STR_TO_DATE("24-02-2022", "%d-%m-%Y"), "Base" );
+
+-- Creazione tabella
+
+create table Season   (  Type varchar(20), 
+		       Start date, 
+		       End date, 
+		       PercentIncrease int, 
+		       Hotel varchar(255),     
+		       
+		       CONSTRAINT FK_stagione_hotel FOREIGN KEY(Hotel) REFERENCES Hotel (Name),     
+		       CONSTRAINT PK_stagione PRIMARY Key(start,end,hotel)   
+		      );
+
+
+INSERT INTO Season (Type, Start, End, PercentIncrease, Hotel) 
+VALUES ('Bassa Stagione', '2022-06-1', '2022-06-30', 20, 'Hotel Bello'),
+	('Media Stagione', '2022-07-01', '2022-07-31', 35, 'Hotel Bello'),
+	('Alta Stagione', '2022-08-01', '2022-08-19', 50, 'Hotel Bello');
+
 
 
 
