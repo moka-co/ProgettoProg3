@@ -9,26 +9,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Cookie;
 import java.io.IOException;
 
-/**
- * Servlet implementation class DebugCookies
- */
+
 @WebServlet("/DebugCookies")
 public class DebugCookies extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+
     public DebugCookies() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		ServletOutputStream out = response.getOutputStream();
 		Cookie [] cookies = request.getCookies();
@@ -47,11 +39,7 @@ public class DebugCookies extends HttpServlet {
 		}
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 	}
 
 }

@@ -16,9 +16,7 @@ import hoppin.CacheSingleton;
 import hoppin.Employee;
 import hoppin.MySQLConnect;
 
-/**
- * Servlet implementation class EmployeeManagement
- */
+
 @WebServlet("/EmployeeManagement")
 public class EmployeeManagement extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -26,20 +24,12 @@ public class EmployeeManagement extends HttpServlet {
 	//In pratica, serve per non far visualizzare la scritta in rosso una volta che ricarichi la pagina
 	//Dopo aver inserito un nuovo utente.
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public EmployeeManagement() {
         super();
         
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		//System.out.println(request.getParameter("AddEmployee"));
 		
@@ -78,11 +68,8 @@ public class EmployeeManagement extends HttpServlet {
 		response.sendRedirect("/hoppin/EmployeeManagement.jsp");
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Credentials", "true");
 		
@@ -102,7 +89,6 @@ public class EmployeeManagement extends HttpServlet {
 		
 		if ( request.getParameter("DeleteEmployee") != null) {
 			MySQLConnect db = new MySQLConnect();
-			System.out.println("Ho ricevuto il messaggio!");
 			CacheSingleton cache = CacheSingleton.getInstance();
 			List<Integer> li = cache.getList();
 			if ( li != null)
