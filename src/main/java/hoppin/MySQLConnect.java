@@ -8,7 +8,7 @@ import java.util.List;
 public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 	String pathToConfig = "";
 	Connection conn = null;
-	private String passw = "anoncorno";
+	private String passw;
 	private String user;
 	private String dburl;
 
