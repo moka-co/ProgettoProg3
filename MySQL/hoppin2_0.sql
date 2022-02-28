@@ -135,7 +135,7 @@ add CONSTRAINT PK_Room PRIMARY Key(Hotel,Number),
 add CONSTRAINT FK_Hotel FOREIGN Key(Hotel) REFERENCES Hotel(Name);
 
 
-alter table Reservation add Name int NOT NULL,
+alter table Reservation
 add Number int,
 add N_Card varchar(20) ,
 add Hotel varchar(20),
