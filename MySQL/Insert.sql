@@ -36,9 +36,9 @@ INSERT INTO Customer (id, completeName, email, passw_hash) VALUES
 --
 
 INSERT INTO Employee (id, completeName, email, passw_hash, accType, sid) VALUES
-(2, 'Mario Tortora', 'mario.tortora@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', 'Dipendente', NULL),
+(2, 'Mario Tortora', 'mario.tortora@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', 'Dipendente', 3),
 (3, 'Raffaele Tortora', 'raffaele.tortora@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', 'Proprietario', NULL),
-(7, 'Raffaella Vano', 'raffella.vano@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', 'Dipendente', NULL),
+(7, 'Raffaella Vano', 'raffella.vano@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', 'Dipendente', 8),
 (8, 'Raffaella Vart', 'raffella.vano@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', 'Proprietario', NULL);
 
 --
