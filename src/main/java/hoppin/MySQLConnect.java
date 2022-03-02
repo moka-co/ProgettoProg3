@@ -308,7 +308,7 @@ public class MySQLConnect {
 		
 	}
 
-	public ArrayList<Reservation> getReservationList(int OwnerId){
+		public ArrayList<Reservation> getReservationList(int OwnerId){
 		//ArrayList<String>[] al = null;
 		
 		ArrayList<Reservation> al = null;
@@ -324,12 +324,12 @@ public class MySQLConnect {
 			//^--Questo dovrebbe diventare un altro metodo
 			
 			
-			pss = conn.prepareStatement("select id,Name,Number, Check_In, Check_Out, Package from Reservation where Name = ?");
+			pss = conn.prepareStatement("select id,Hotel,Number, Check_In, Check_Out, Package from Reservation where Hotel = ?");
 			pss.setString(1, HotelName);
 			rs = pss.executeQuery();
 			while (rs.next()) {
 				int id = rs.getInt("id");
-				String CustomerName = rs.getString("Name");
+				String CustomerName = rs.getString("Hotel");
 				String RoomNum = rs.getString("Number");
 				String CheckIn = rs.getString("Check_In");
 				String CheckOut = rs.getString("Check_Out");
@@ -418,6 +418,7 @@ public class MySQLConnect {
 			return false;
 		}
 	}
+	
 	
 	public boolean editReservation(Reservation res) {
 		DateTimeFormatter oformat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
