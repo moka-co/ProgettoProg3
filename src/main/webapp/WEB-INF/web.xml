@@ -47,6 +47,18 @@
     <filter-name>AuthFilter</filter-name>
     <url-pattern>/AuthFilter</url-pattern>
     <url-pattern>/HomePage.jsp</url-pattern>
+    
+    <url-pattern>/PackagesManagement</url-pattern>
+    <url-pattern>/PackagesManagement.jsp</url-pattern>
+    
+    <url-pattern>/ReservationManagement</url-pattern>
+     <url-pattern>/ReservationManagement.jsp</url-pattern>
+     
+     <url-pattern>/FinanceManagement</url-pattern>
+      <url-pattern>/FinanceManagement.jsp</url-pattern>
+      
+       <url-pattern>/EmployeeManagement.jsp</url-pattern>
+       <url-pattern>/EmployeeManagement</url-pattern>
   </filter-mapping>
   
    <servlet>
