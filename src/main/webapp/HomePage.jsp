@@ -24,12 +24,10 @@ for (Cookie aCookie : cookies) {
 	if (name.equals("id")){
 		String value = aCookie.getValue();
 		int i = Integer.valueOf(value);
-		if ( name.equals("id")){
-			MySQLConnect db = new MySQLConnect();
-			Firstname = db.getNamebyId(i);
-			db.disconnect();
+		MySQLConnect db = new MySQLConnect();
+		Firstname = db.getNamebyId(i);
+		db.disconnect();
 		
-		}
 	}
 }
 %>

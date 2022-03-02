@@ -52,26 +52,30 @@ td, th {
 </c:choose>
 
 
-
-
-<h2>Dipendenti:</h2>
 <br>
 <div>
+<h2>Dipendenti:</h2>
 <table>
 <tr>
 <td> <b> Nome </b></td>
 <td> <b> Email </b> </td>
 </tr>
+
 <c:forEach items="${elist}" var="employee">
 	<tr id="${employee.id}" class="highlight">
     	<td> <c:out value="${employee.completeName}"/>  </td>
     	<td> <c:out value="${employee.email} "/> </td>
     	</tr>
 </c:forEach>
+
 </table>
 </div>
+
+
 <br>
 <br>
+
+
 <div>
 	<input class="DeleteEmployee"  name="DeleteEmployee" type="submit" value="Elimina Dipendente"></input>
 </div>
@@ -80,6 +84,8 @@ td, th {
         $(".highlight").click(function(event) {
         	var id = $(this).attr("id");
         	var backColor = $(this).css('background-color');
+        	
+        	
         	if ( backColor == 'rgba(0, 0, 0, 0)' ){
         		$(this).css('background-color','#ffff99');
         		AddId(id);
@@ -93,7 +99,7 @@ td, th {
 
  });
 	function AddId(x) {
-        $.post( //manda messaggio al servlet EmployeeManagement
+        $.post( //manda dati al servlet EmployeeManagement
             "EmployeeManagement", 
            {AddAccId : x},  null 
            )

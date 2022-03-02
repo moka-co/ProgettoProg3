@@ -107,6 +107,7 @@ Profitti totali: <c:out value="${sumAllPrice}"/> <br>
 		</form>
 	</div>
 </div>
+
 <div id="invisibleDiv4" hidden="hidden">
 		<p>Stai modificando l'elemento selezionato in giallo: </p>
 		<form action="./FinanceManagement" method="post">
@@ -116,7 +117,6 @@ Profitti totali: <c:out value="${sumAllPrice}"/> <br>
        		Incremento percentuale <input type="text" name="price"></input> <br>
 		<input name="ConfirmEditEtoSeason" type="submit" value="Conferma modifica"></input> <br>
 		</form>
-	</div>
 </div>
 
 

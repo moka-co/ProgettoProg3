@@ -40,6 +40,7 @@ td, th {
 <td> <b> Check-Out </b> </td>
 <td> <b> Pacchetto </b> </td>
 </tr>
+
 <c:forEach items="${rlist}" var="reservation">
 	<tr id="${reservation.id}" class="highlight">
     	<td> <c:out value="${reservation.customerName}"/>  </td>
@@ -49,6 +50,7 @@ td, th {
     	<td> <c:out value="${reservation.pckg} "/> </td>
     	</tr>
 </c:forEach>
+
 </table>
 </div>
 <button name="AddReservation" id="AddReservation">Aggiungi prenotazione</button>
@@ -139,7 +141,7 @@ $(document).ready(function() {
 	)
 });	
 
-$(document).ready(function() {
+$(document).ready(function() { //highlight
 			$(".highlight").click(
 					function(event){
 						var id = $(this).attr("id");
