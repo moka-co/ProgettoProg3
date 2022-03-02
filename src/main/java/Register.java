@@ -8,16 +8,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import hoppin.AuthenticationGUI;
 import hoppin.MySQLConnect;
-import hoppin.ServeSingleton;
 
+//Classe da rifare
 
 @WebServlet("/Register")
 public class Register extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	ServletOutputStream out;
-	AuthenticationGUI gui;
 
 
     public Register() {
@@ -27,8 +25,6 @@ public class Register extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		out = response.getOutputStream();
-		gui = new AuthenticationGUI(out);
-		gui.register();
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -42,8 +38,6 @@ public class Register extends HttpServlet {
 		}
 		
 		db.register(name, user, passw);
-		ServeSingleton save = ServeSingleton.getInstance();
-		save.setValue(2);
 		response.sendRedirect("/hoppin/Authentication");
 		
 	}

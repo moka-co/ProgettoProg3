@@ -1,6 +1,7 @@
 
 
-import jakarta.servlet.http.Cookie;
+import hoppin.factory.AuthFactory;
+import hoppin.factory.AbstractFactory;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -28,23 +29,17 @@ public class AuthFilter extends HttpFilter {
 		HttpServletRequest req = (HttpServletRequest) request;
 
 		// pass the request along the filter chain
-		boolean flag = false;
-		
-		Cookie [] cookies = req.getCookies();
-		if (cookies != null) {
-			for (Cookie aCookie : cookies) {
-				String comp = aCookie.getName();
-				if ( comp.equals("id")) {
-					flag = true;
-					chain.doFilter(request, response);
-				}
-			}
-		}
-		if ( flag == false ) { // https://stackoverflow.com/questions/18211497/servlet-cannot-forward-after-response-has-been-committed
+
+		AbstractFactory factory = new AuthFactory();
+		int id = ((AuthFactory) factory).makeCookieGetter(req).getIdbyCookies();
+		if ( id == -1) { //Cookie non presente o scaduto, rimanda a Index.html
 			RequestDispatcher rd = request.getRequestDispatcher("/");
 			rd.forward(request, response);
-			
+			// https://stackoverflow.com/questions/18211497/servlet-cannot-forward-after-response-has-been-committed
+		}else {
+			chain.doFilter(request, response);
 		}
+
 		
 	}
 

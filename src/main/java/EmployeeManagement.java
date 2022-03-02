@@ -1,8 +1,9 @@
 
 
 import jakarta.servlet.ServletException;
+import hoppin.factory.EmployeeFactory;
+import hoppin.factory.AbstractFactory;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,6 +36,7 @@ public class EmployeeManagement extends HttpServlet {
 		
 		response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Credentials", "true");
+        request.getSession().removeAttribute("ResultAddEmployee");
         
 		HttpSession session=request.getSession();
         sem++;
@@ -43,53 +45,40 @@ public class EmployeeManagement extends HttpServlet {
         	
         }
         
-        
-		int i = 0;
-		ArrayList<Employee> elist = null;
 		MySQLConnect db = new MySQLConnect();
-		Cookie [] cookies = request.getCookies(); 
 
 		//Cookie sempre diverso da null, altrimenti AuthFilter se ne accorge e rimanda ad Authentication
-
-		for (Cookie aCookie : cookies) {
-			String name = aCookie.getName();
-			if (name.equals("id")){
-				String value = aCookie.getValue();
-				i = Integer.valueOf(value);
-			}
-		}
-
-		elist = db.getEmployeeList(i);
+		AbstractFactory factory = new EmployeeFactory();
+		int i = ((EmployeeFactory) factory).makeCookieGetter(request)
+											.getIdbyCookies();
+		
+		//Va ripensato anche la responsabilità di db.getEmployeeList, 
+		//Infatti secondo me non dovrebbe essere lei a costruire ArrayList<Employee>
+		ArrayList<Employee> elist = db.getEmployeeList(i);
+		db.disconnect();
 		
 		session.setAttribute("elist",elist);
 		session.setAttribute("show", "questo");
-		//this.getServletContext().getRequestDispatcher("/hoppin/EmployeeManagement.jsp").forward(request, response);
-		db.disconnect();
+
 		response.sendRedirect("/hoppin/EmployeeManagement.jsp");
 	}
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session=request.getSession();
+		
 		response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Credentials", "true");
 		
-		int i=0;
-		HttpSession session=request.getSession();
-		Cookie [] cookies = request.getCookies();
-		if ( cookies == null) {
-			return;
-		}
-		for (Cookie aCookie : cookies) {
-			String name = aCookie.getName();
-			if (name.equals("id")){
-				String value = aCookie.getValue();
-				i = Integer.valueOf(value);
-			}
-		}
+        CacheSingleton cache = CacheSingleton.getInstance();
+        
+        AbstractFactory factory = new EmployeeFactory();
+		int i = ((EmployeeFactory) factory).makeCookieGetter(request)
+											.getIdbyCookies();
 		
 		if ( request.getParameter("DeleteEmployee") != null) {
 			MySQLConnect db = new MySQLConnect();
-			CacheSingleton cache = CacheSingleton.getInstance();
+			cache = CacheSingleton.getInstance();
 			List<Integer> li = cache.getList();
 			if ( li != null)
 				db.deleteEmployee(li);
@@ -102,7 +91,7 @@ public class EmployeeManagement extends HttpServlet {
 		if ( rai != null) {
 			int x = Integer.valueOf(rai);
 
-			CacheSingleton cache = CacheSingleton.getInstance();
+			cache = CacheSingleton.getInstance();
 
 			if ( x!= 0)
 				cache.removeValue(x);
@@ -119,7 +108,7 @@ public class EmployeeManagement extends HttpServlet {
 		if ( aai != null) {
 			int x = Integer.valueOf(aai);
 
-			CacheSingleton cache = CacheSingleton.getInstance();
+			cache = CacheSingleton.getInstance();
 			if ( x != 0)
 				cache.setValue(x);
 			
@@ -133,11 +122,8 @@ public class EmployeeManagement extends HttpServlet {
 		}
 		
 		if ( request.getParameter("AddEmployee") != null) {
-			ArrayList<Employee> elist = null;
 			MySQLConnect db = new MySQLConnect();
-
-
-			elist = db.getEmployeeList(i);
+			ArrayList<Employee> elist = db.getEmployeeList(i);
 			
 			
 			session.setAttribute("elist",elist);
@@ -163,10 +149,11 @@ public class EmployeeManagement extends HttpServlet {
 				}else {
 					session.setAttribute("ResultAddEmployee","no");
 				}
+				response.sendRedirect("/hoppin/EmployeeManagement");
 			}
 			
 			//response.sendRedirect("/hoppin/EmployeeManagement.jsp");
-			doGet(request, response);
+			//doGet(request, response);
 		}
 		//doGet(request, response);
 	}

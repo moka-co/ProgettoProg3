@@ -1,7 +1,6 @@
 import hoppin.*;
-
+import hoppin.builder.ReservationBuilder;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,6 +8,9 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import hoppin.factory.AbstractFactory;
+import hoppin.factory.ReservationFactory;
+
 
 public class ReservationManagement extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -26,15 +28,8 @@ public class ReservationManagement extends HttpServlet {
 		
         ArrayList<Reservation> rlist = null;
         
-        Cookie [] cookies = request.getCookies(); 
-        int id = 0;
-		for (Cookie aCookie : cookies) {
-			String name = aCookie.getName();
-			if (name.equals("id")){
-				String value = aCookie.getValue();
-				id = Integer.valueOf(value);
-			}
-		}
+        AbstractFactory factory = new ReservationFactory();
+        int id = ((ReservationFactory) factory).makeCookieGetter(request).getIdbyCookies();
 		
 		//________________
 		
@@ -51,15 +46,19 @@ public class ReservationManagement extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		HttpSession session=request.getSession();
+		CacheSingleton cache = CacheSingleton.getInstance();
 		
 		if ( request.getParameter("AddValue") != null) { //Si attiva quando si clicca su un elemento della tabella
 			int value = Integer.valueOf(request.getParameter("AddValue"));
-			CacheSingleton cache = CacheSingleton.getInstance();
 			cache.setSingleValue(value);
 			
 		}
 		
 		if ( request.getParameter("ConfirmAddReservation") != null) { //Si attiva quando si preme il bottone che conferma l'inserimento dati
+			ReservationBuilder rb = new ReservationBuilder(request);
+			Reservation res = rb.getReservation();
+			
+			/*
 			String name = request.getParameter("name");
 			String room = request.getParameter("room");
 			String checkin = request.getParameter("checkin");
@@ -73,34 +72,35 @@ public class ReservationManagement extends HttpServlet {
 				System.out.println("Error");
 				doGet(request,response);
 				return;
-			}
+			} */
 			
-
+			AbstractFactory factory = new ReservationFactory();
+		    int id = ((ReservationFactory) factory).makeCookieGetter(request).getIdbyCookies();
 			MySQLConnect db = new MySQLConnect();
-			boolean res = db.addReservation(name, room, checkin, checkout, pckg);
+			boolean result = db.addReservation(id, res);
+			db.disconnect();
 				
-			if ( res == true) {
+			if ( result == true) {
 				session.setAttribute("ResultAddEmployee","ok");
 					
 			}else {
 				session.setAttribute("ResultAddEmployee","no");
 			}
 			
-			db.disconnect();
+
 			//response.sendRedirect("/hoppin/EmployeeManagement.jsp");
 			doGet(request, response);
 		}
 		
 		if ( request.getParameter("DeleteReservation") != null) {
 			MySQLConnect db = new MySQLConnect();
-			CacheSingleton cache = CacheSingleton.getInstance();
 			db.deleteReservation(cache.getSingleValue());
 			cache.setSingleValue(-1);
 		}
 		
 		if ( request.getParameter("ConfirmEditReservation") != null ) {
 			MySQLConnect db = new MySQLConnect();
-			CacheSingleton cache = CacheSingleton.getInstance();
+			
 			String name = request.getParameter("name");
 			String room = request.getParameter("room");
 			String checkin = request.getParameter("checkin");
