@@ -6,25 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
-	String pathToConfig = "";
 	Connection conn = null;
-	private String passw;
-	private String user;
-	private String dburl;
+	private String passw = "pass";
+	private String Employee ="root";
 
 	public MySQLConnect(){
 		
-		try (InputStream config = new FileInputStream(pathToConfig + "config.properties"); ){
-			Properties prop = new Properties();
-			prop.load(config);
-			
-			this.user= prop.getProperty("db.user");
-	        this.passw = prop.getProperty("db.pass");
-	        this.dburl= "jdbc:mysql://" + prop.getProperty("db.url");
-	            
-			this.conn = DriverManager.getConnection(this.dburl, this.user, this.passw); //Establishing connection
-		} catch (IOException e) {
-			System.out.println("Error while getting config file");
+		try {
+			this.conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/hoppin", this.Employee, this.passw); //Establishing connection
 		} catch (SQLException e) {
 			System.out.println(e);
 			System.out.println("Error while connecting to the database");
@@ -40,21 +29,26 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 		}
 	}
 	
-	public boolean login(String user, String passw) { 
+	public boolean login(String Employee, String passw) { 
 		try {
 			// ps = PreparedStatement
 			// rs = ResultSet
-			PreparedStatement ps = conn.prepareStatement(" select id from  Employee where email = ? and passw_hash = md5(?)  UNION select id from  Customer where email = ? and passw_hash = md5(?)");
+			//PreparedStatement ps = conn.prepareStatement(" select id from  Employee where email = ? and passw_hash = md5(?)  UNION select id from  Customer where email = ? and passw_hash = md5(?)");
 			
-			ps.setString(1, user);
+			PreparedStatement ps = conn.prepareStatement(" select id from  Employee where email = ? and passw_hash = md5(?)");
+			
+			ps.setString(1, Employee);
 			ps.setString(2, passw);
-			ps.setString(3, user);
-			ps.setString(4, passw);
+			
+			
+			/*ps.setString(3, Employee);
+			ps.setString(4, passw);*/
 			ResultSet rs = ps.executeQuery();
-		
+			
 			if ( rs.next() == false) {
 				return false;
 			}
+			
 			
 		} catch (SQLException e) { //e = Exception
 			System.out.println(e);
@@ -66,7 +60,7 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 	public boolean register(String name, String email, String passw) {
 		
 		try {
-			PreparedStatement pss = conn.prepareStatement("select max(id) as id from User");
+			PreparedStatement pss = conn.prepareStatement("select max(id) as id from Employee");
 			ResultSet rs = pss.executeQuery();
 			int i=2;
 			if ( rs != null) {
@@ -74,7 +68,7 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 				i = rs.getInt("id") + 1;
 			}
 			rs.close();
-			PreparedStatement psi = conn.prepareStatement("insert into User (id, completeName, email, passw_hash, accType ) values (?,?,?,?,?)");
+			PreparedStatement psi = conn.prepareStatement("insert into Employee (id, completeName, email, passw_hash, accType ) values (?,?,?,?,?)");
 			psi.setInt(1, i);
 			psi.setString(2, name);
 			psi.setString(3, email);
@@ -94,7 +88,7 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 		int i = 0;
 		
 		try {
-			PreparedStatement pss = conn.prepareStatement("select id from User where email = ?");
+			PreparedStatement pss = conn.prepareStatement("select id from Employee where email = ?");
 			pss.setString(1, email);
 			ResultSet rs = pss.executeQuery();
 			rs.next();
@@ -109,10 +103,20 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 	public String getNamebyId(int i) {
 		String completeName = null;
 		try {
-			PreparedStatement pss = conn.prepareStatement("select completeName from User where id = ?");
+			PreparedStatement pss = conn.prepareStatement("select completeName from Employee where id = ?");
 			pss.setInt(1, i);
 			ResultSet rs = pss.executeQuery();
-			rs.next();
+			
+			if(rs.next()== false)
+			{
+				pss = conn.prepareStatement("select completeName from Customer where id = ?");
+				pss.setInt(1, i);
+				rs = pss.executeQuery();
+				
+				
+			}	
+			
+			//rs.next();
 			completeName = rs.getString("completeName");
 			
 		}catch (SQLException e) {
@@ -125,7 +129,7 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
         String AccType="";
        
         try {
-        PreparedStatement ps = conn.prepareStatement("select accType from User where id = ?");
+        PreparedStatement ps = conn.prepareStatement("select accType from Employee where id = ?");
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         rs.next();
@@ -152,7 +156,7 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
                 HotelName = rs.getString("Name");
                
             }else if (AccType.equals("Employee")) {
-                PreparedStatement ps = conn.prepareStatement("select Name from Hotel where OwnerId = (select sid from User where id = ?) ");
+                PreparedStatement ps = conn.prepareStatement("select Name from Hotel where OwnerId = (select sid from Employee where id = ?) ");
                 ps.setInt(1, id);
                 ResultSet rs = ps.executeQuery();
                 rs.next();
@@ -170,7 +174,7 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 	public List<String> getNEmployeeList(int i){ //Funzione da cancellare, utile solo come riferimento
 		List<String> list = new ArrayList<String>();
 		try {
-			PreparedStatement pss = conn.prepareStatement("select completeName from User where sid = ?");
+			PreparedStatement pss = conn.prepareStatement("select completeName from Employee where sid = ?");
 			pss.setInt(1, i);
 			ResultSet rs = pss.executeQuery();
 			
@@ -187,7 +191,7 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 	
 	public boolean addEmployee(String name, String email, String passw, int id) {
 		try {
-			PreparedStatement pss = conn.prepareStatement("select max(id) as id from User");
+			PreparedStatement pss = conn.prepareStatement("select max(id) as id from Employee");
 			ResultSet rs = pss.executeQuery();
 			int i=2;
 			if ( rs != null) {
@@ -195,12 +199,12 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 				i = rs.getInt("id") + 1;
 			}
 			rs.close();
-			PreparedStatement psi = conn.prepareStatement("insert into User (id, completeName, email, passw_hash, accType, sid ) values (?,?,?,?,?,?)");
+			PreparedStatement psi = conn.prepareStatement("insert into Employee (id, completeName, email, passw_hash, accType, sid ) values (?,?,?,?,?,?)");
 			psi.setInt(1, i);
 			psi.setString(2, name);
 			psi.setString(3, email);
 			psi.setString(4, passw);
-			psi.setString(5, "Customer");
+			psi.setString(5, "Employee");
 			psi.setInt(6, id);
 			psi.execute();
 			return true;
@@ -217,7 +221,7 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 		ArrayList<Employee> al = null;
 		
 		try {
-			PreparedStatement pss = conn.prepareStatement("select count(id) as max from User where sid = ?");
+			PreparedStatement pss = conn.prepareStatement("select count(id) as max from Employee where sid = ?");
 			pss.setInt(1, i);
 			ResultSet rs = pss.executeQuery();
 			rs.next();
@@ -226,7 +230,7 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 			al.ensureCapacity(max);
 			
 			
-			pss = conn.prepareStatement("select id,completeName,email from User where sid = ?");
+			pss = conn.prepareStatement("select id,completeName,email from Employee where sid = ?");
 			pss.setInt(1, i);
 			rs = pss.executeQuery();
 			while (rs.next()) {
@@ -270,7 +274,7 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 			
 			String idsToDelete = sb.toString();
 			System.out.println("Stringa costruita: " + idsToDelete);
-			PreparedStatement ps = conn.prepareStatement("delete from User where id IN " + idsToDelete);
+			PreparedStatement ps = conn.prepareStatement("delete from Employee where id IN " + idsToDelete);
 			
 			for (int i=0; i<size;i++) {
 				ps.setInt(i+1, ids.get(i));
@@ -303,15 +307,15 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 			//^--Questo dovrebbe diventare un altro metodo
 			
 			
-			pss = conn.prepareStatement("select id,CustomerName,RoomNum, CheckIn, CheckOut, Package from Reservation where HotelName = ?");
+			pss = conn.prepareStatement("select id,Name,Number, Check_In, Check_Out, Package from Reservation where Name = ?");
 			pss.setString(1, HotelName);
 			rs = pss.executeQuery();
 			while (rs.next()) {
 				int id = rs.getInt("id");
-				String CustomerName = rs.getString("CustomerName");
-				String RoomNum = rs.getString("RoomNum");
-				String CheckIn = rs.getString("CheckIn");
-				String CheckOut = rs.getString("CheckOut");
+				String CustomerName = rs.getString("Name");
+				String RoomNum = rs.getString("Number");
+				String CheckIn = rs.getString("Check_In");
+				String CheckOut = rs.getString("Check_Out");
 				String pckg = rs.getString("Package");
 				Reservation pnt = new Reservation(CustomerName, id, RoomNum, CheckIn, CheckOut, pckg );
 				al.add(pnt);
@@ -337,11 +341,11 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 			rs.close();
 			
 			//get Hotel Name
-			pss = conn.prepareStatement("select HotelName from Room where Num= ?;");
+			pss = conn.prepareStatement("select Hotel from Room where Number= ?;");
 			pss.setString(1, room);
 			rs = pss.executeQuery();
 			rs.next();
-			String HotelName = rs.getString("HotelName");
+			String HotelName = rs.getString("Hotel");
 			
 			//Conversione del formato HTML:
 			//HTML ha come formato yyyy-mm-dd, bisogna convertirlo prima di inserire
@@ -358,8 +362,18 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 			checkout = Datecheckout.format(nformat).toString();
 			System.out.print("Checkin: " + checkin + " | Checkout: " + checkout + "\n");
 			
-			PreparedStatement psi = conn.prepareStatement("INSERT INTO Reservation (CustomerName, id, HotelName, RoomNum, CheckIn, CheckOut, Package) "
+			PreparedStatement psi = conn.prepareStatement("INSERT INTO Reservation (Name, id, Hotel, Number, Check_In, Check_Out, Package) "
 					+ " VALUES (?, ?, ?, ?, STR_TO_DATE( ?,  '%d-%m-%Y'), STR_TO_DATE( ?, '%d-%m-%Y' ) , ? )");
+			
+			
+			
+			
+			System.out.println("INSERT INTO Reservation (Name, id, Hotel, Number, Check_In, Check_Out, Package) "
+					+ " VALUES ("+name+", "+id+", "+HotelName+", "+room+", STR_TO_DATE( "+checkin+",  '%d-%m-%Y'), STR_TO_DATE( "+checkout+", '%d-%m-%Y' ) , "+ pckg +" )");
+			
+			
+			
+			
 			psi.setString(1, name);
 			psi.setInt(2, id);
 			psi.setString(3, HotelName);
@@ -455,51 +469,13 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 		}
 	}
 	
-	public ArrayList<Integer> getTotProfit(int id) {
-		PreparedStatement ps;
-		//ResultSet rs;
-		ArrayList<Integer> res = new ArrayList<Integer>();
-		
-		try {
-			//Check Account Type
-			String AccType = "";
-			String HotelName ="";
-			ResultSet rs;
-			
-			HotelName = this.getHotelNameById(id);			
-			
-			//Query per prendere la somma del prezzo totale di ogni prenotazione e il numero di prenotazioni
-			ps = conn.prepareStatement(" select sum(PriceList.Price) as sumPrice, count(Reservation.id) as totCount"
-					+ "	from Reservation"
-					+ "		INNER JOIN Room ON Room.Num = Reservation.RoomNum"
-					+ "		INNER JOIN PriceList ON Room.Type=PriceList.RoomType"
-					+ "		WHERE Reservation.HotelName= ? ;"
-					);
-			ps.setString(1, HotelName);
-			rs = ps.executeQuery();
-			rs.next();
-			int sumPrice = rs.getInt("sumPrice");
-			int totCount = rs.getInt("totCount");
-			
-			//Aggiungi gli elementi trovati dalla Query all'array
-			res.add(sumPrice);
-			res.add(totCount);
-			
-			
-		}catch ( SQLException e) {
-			System.out.println(e);
-			res.add(-1); res.add(-1);
-		}
-		
-		return res;
-	}
 	
 	public ArrayList<Package> GetPackageList(int i){
 		ArrayList<Package> PackageList = new ArrayList<Package>();
 	
 		try {
 			
-			PreparedStatement psi = conn.prepareStatement("select sid from User where id = ? ");
+			PreparedStatement psi = conn.prepareStatement("select sid from Employee where id = ? ");
 			int idprop;
 			String Hname;
 			psi.setInt(1,i);
@@ -558,29 +534,7 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 	
 }
 	
-	public ArrayList<PriceList> getPriceList(int id){ //PriceList = prezziario
-        ArrayList<PriceList> al = new ArrayList<PriceList>(); //al = array list
-       
-        try {
-            String HotelName = this.getHotelNameById(id);
-            PreparedStatement ps = conn.prepareStatement("select RoomType, Price from PriceList where Hotel = ?");
-            ps.setString(1, HotelName);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                String RoomType = rs.getString("RoomType");
-                int price = rs.getInt("Price");
-                PriceList pl = new PriceList(RoomType,price);
-                al.add(pl);
-            }
-           
-        } catch ( SQLException e) {
-            System.out.println(e);
-           
-        }
-       
-        return al;
-    }
-
+	
 
 	public ArrayList<Integer> getTotProfit(int id) {
 		PreparedStatement ps;
@@ -632,51 +586,10 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 		return res;
 	}
 	
-	public String getAccTypeById(int id) { //Questo metodo è richiamato da più metodi di questa classe
-		String AccType="";
-		
-		try {
-		PreparedStatement ps = conn.prepareStatement("select accType from User where id = ?");
-		ps.setInt(1, id);
-		ResultSet rs = ps.executeQuery();
-		rs.next();
-		if (rs.getString("accType") != null) {
-			AccType = rs.getString("accType");
-		}
-		
-		} catch  ( SQLException e) {
-			System.out.println(e);
-		}
-		
-		return AccType;
-	}
 	
 	
-	public String getHotelNameById(int id) { //Questo metodo è richiamato da più metodi di questa classe
-		String HotelName = "";
-		try {
-			String AccType = this.getAccTypeById(id);
-			if ( AccType.equals("Owner")) {
-				PreparedStatement ps = conn.prepareStatement("select Name from Hotel where OwnerId = ?");
-				ps.setInt(1, id);
-				ResultSet rs = ps.executeQuery();
-				rs.next();
-				HotelName = rs.getString("Name");
-				
-			}else if (AccType.equals("Employee")) {
-				PreparedStatement ps = conn.prepareStatement("select Name from Hotel where OwnerId = (select sid from User where id = ?) ");
-				ps.setInt(1, id);
-				ResultSet rs = ps.executeQuery();
-				rs.next();
-				HotelName = rs.getString("Name");
-			}
-			
-		}catch (SQLException e) {
-			System.out.println(e);
-		}
-		
-		return HotelName;
-	}
+	
+	
 	
 	
 	public ArrayList<PriceList> getPriceList(int id){ //PriceList = prezziario
@@ -684,11 +597,11 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 		
 		try {
 			String HotelName = this.getHotelNameById(id);
-			PreparedStatement ps = conn.prepareStatement("select RoomType, Price from PriceList where Hotel = ?");
+			PreparedStatement ps = conn.prepareStatement("select Type_Room, Price from PriceList where Hotel = ?");
 			ps.setString(1, HotelName);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				String RoomType = rs.getString("RoomType");
+				String RoomType = rs.getString("Type_Room");
 				int price = rs.getInt("Price");
 				PriceList pl = new PriceList(RoomType,price);
 				al.add(pl);
@@ -705,7 +618,7 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 	public boolean addElementToPriceList(String RoomType, int price, int id) {
 		try {
 			String Hotel = this.getHotelNameById(id);
-			PreparedStatement ps = conn.prepareStatement("insert into PriceList (Price, RoomType, Hotel ) values ( ?, ?, ? )");
+			PreparedStatement ps = conn.prepareStatement("insert into PriceList (Price, Type_Room, Hotel ) values ( ?, ?, ? )");
 			ps.setInt(1, price);
 			ps.setString(2, RoomType);
 			ps.setString(3, Hotel);
@@ -722,7 +635,7 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 		
 		try {
 			String Hotel = this.getHotelNameById(id);
-			PreparedStatement ps = conn.prepareStatement("update PriceList set Price = ? where RoomType = ? and Hotel = ?");
+			PreparedStatement ps = conn.prepareStatement("update PriceList set Price = ? where Type_Room = ? and Hotel = ?");
 			ps.setInt(1, price);
 			ps.setString(2, RoomType);
 			ps.setString(3, Hotel);
@@ -740,7 +653,7 @@ public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
 		boolean res = true;
 		try {
 			String Hotel = this.getHotelNameById(id);
-			PreparedStatement ps = conn.prepareStatement("delete from PriceList where Hotel = ? and RoomType = ?");
+			PreparedStatement ps = conn.prepareStatement("delete from PriceList where Hotel = ? and Type_Room = ?");
 			ps.setString(1, Hotel);
 			ps.setString(2, RoomType);
 			ps.execute();
