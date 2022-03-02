@@ -1,24 +1,41 @@
 package hoppin;
 import java.sql.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
-public class MySQLConnect { //Forse questo dovrebbe diventare Singleton
+public class MySQLConnect { 
+	String pathToConfig;
 	Connection conn = null;
-	private String passw = "pass";
-	private String Employee ="root";
+	private String passw;
+	private String user;
+	private String dburl;
 
 	public MySQLConnect(){
 		
-		try {
-			this.conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/hoppin", this.Employee, this.passw); //Establishing connection
+		try (InputStream config = new FileInputStream(pathToConfig + "config.properties"); ){
+			Properties prop = new Properties();
+			prop.load(config);
+			
+			this.user= prop.getProperty("db.user");
+	        this.passw = prop.getProperty("db.pass");
+	        this.dburl= "jdbc:mysql://" + prop.getProperty("db.url");
+	            
+			this.conn = DriverManager.getConnection(this.dburl, this.user, this.passw); //Establishing connection
+		} catch (IOException e) {
+			System.out.println("Error while getting config file");
 		} catch (SQLException e) {
 			System.out.println(e);
 			System.out.println("Error while connecting to the database");
 		}
 	}
+	
 	
 	public void disconnect() {
 		
