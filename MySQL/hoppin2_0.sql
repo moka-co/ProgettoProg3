@@ -88,15 +88,16 @@ CREATE TABLE Documents (
 );
 
 create table PriceList
-  (type_room varchar(20),
+  (
+  type_room varchar(20),
   price float,
 
   -- chiave esterna
-  hotel varchar(20),
+  Hotel varchar(20),
 
-  CONSTRAINT FK_prezziario_hotel FOREIGN KEY (hotel) REFERENCES hotel (name),
+  CONSTRAINT FK_prezziario_hotel FOREIGN KEY (Hotel) REFERENCES Hotel (Name),
 
-  CONSTRAINT PK_prezziario PRIMARY KEY(hotel,type_room)
+  CONSTRAINT PK_prezziario PRIMARY KEY(Hotel,type_room)
   );
 
 create table Season
