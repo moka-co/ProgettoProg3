@@ -94,7 +94,7 @@ INSERT INTO Room (Number, Type, Hotel) VALUES
 -- Dump dei dati per la tabella `stagione`
 --
 
-INSERT INTO Season (type, start, end, aumento_percentuale, Hotel) VALUES
+INSERT INTO Season (type, start, end, PercentIncrease, Hotel) VALUES
 ('Bassa stagione', '2022-06-01', '2022-06-30', 20, 'Hotel Belvedere'),
 ('Bassa stagione', '2022-06-01', '2022-06-30', 20, 'Hotel Hoppo'),
 ('Media Stagione', '2022-07-01', '2022-07-31', 35, 'Hotel Belvedere'),
