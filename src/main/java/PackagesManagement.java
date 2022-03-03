@@ -1,9 +1,8 @@
 
-import hoppin.MySQLConnect;
+import hoppin.sql.MySQLPackages;
 import hoppin.Package;
+import hoppin.factory.PackagesFactory;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,19 +30,10 @@ public class PackagesManagement extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		MySQLConnect db = new MySQLConnect();
-		int i=0;
-		Cookie [] cookies = request.getCookies(); 
-
-		//Cookie sempre diverso da null, altrimenti AuthFilter se ne accorge e rimanda ad Authentication
-
-		for (Cookie aCookie : cookies) {
-			String name = aCookie.getName();
-			if (name.equals("id")){
-				String value = aCookie.getValue();
-				i = Integer.valueOf(value);
-			}
-		}
+		MySQLPackages db = new MySQLPackages();
+		PackagesFactory Factory = new PackagesFactory();
+		int i=Factory.makeCookieGetter(request).getIdbyCookies();
+	
 		HttpSession session = request.getSession();
 		
 		ArrayList<Package> PackageList = db.GetPackageList(i);
@@ -66,22 +56,13 @@ public class PackagesManagement extends HttpServlet {
 			String Npack = request.getParameter("NPack");
 			String DPack = request.getParameter("DPack");
 			int PPack = Integer.valueOf(request.getParameter("PPack"));
+			PackagesFactory Factory = new PackagesFactory();
+			int i=Factory.makeCookieGetter(request).getIdbyCookies();
 			
-			int i=0;
-			Cookie [] cookies = request.getCookies(); 
-
-			//Cookie sempre diverso da null, altrimenti AuthFilter se ne accorge e rimanda ad Authentication
-
-			for (Cookie aCookie : cookies) {
-				String name = aCookie.getName();
-				if (name.equals("id")){
-					String value = aCookie.getValue();
-					i = Integer.valueOf(value);
-				}
-			}
-			
-			MySQLConnect db = new MySQLConnect();
+			MySQLPackages db = new MySQLPackages();
 			db.AddPackage(i, Npack, DPack, PPack);
+			
+			db.disconnect();
 			
 			doGet(request, response);
 			}
