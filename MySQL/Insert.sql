@@ -36,17 +36,18 @@ INSERT INTO Customer (id, completeName, email, passw_hash) VALUES
 --
 
 INSERT INTO Employee (id, completeName, email, passw_hash, accType, sid) VALUES
-(2, 'Mario Tortora', 'mario.tortora@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', 'Dipendente', 3),
-(3, 'Raffaele Tortora', 'raffaele.tortora@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', 'Proprietario', NULL),
-(7, 'Raffaella Vano', 'raffella.vano@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', 'Dipendente', 8),
-(8, 'Raffaella Vart', 'raffella.vano@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', 'Proprietario', NULL);
+(2, 'Mario Tortora', 'mario.tortora@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', 'Employee', 3),
+(3, 'Raffaele Tortora', 'raffaele.tortora@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', 'Owner', NULL),
+(7, 'Raffaella Vano', 'raffella.vano@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', 'Employee', 8),
+(8, 'Raffaella Vart', 'raffella.vano@gmail.it', '5160c4f3a3aeac992248ea1a191e10d2', 'Owner', NULL),
+(9, 'Pinco Pallo', 'pinco@pallo', '4ae8cde26bdd8620847a388e968d0f43', 'Owner', NULL);
 
 --
 -- Dump dei dati per la tabella `hotel`
 --
 
 INSERT INTO Hotel (Name, Via, City, Postcode, Stars, Balance, description, OwnerId) VALUES
-('Hotel Belvedere', 'Toledo,22', 'Napoli', '80234', 4, NULL, NULL, NULL),
+('Hotel Belvedere', 'Toledo,22', 'Napoli', '80234', 4, NULL, NULL, 9),
 ('Hotel Hoppo', 'Gramsci, 33', 'Roma', '1234', 5, NULL, NULL, NULL);
 
 --
