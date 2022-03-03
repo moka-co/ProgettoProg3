@@ -118,7 +118,7 @@ create table Season
     numero_documento varchar(20),
     id_prenota int,
     CONSTRAINT fk_documentiMemorizzati_documenti FOREIGN KEY(numero_documento) REFERENCES Documents(number),
-    CONSTRAINT fk_documentiMemorizzati_prenotazione FOREIGN KEY(id_prenota) REFERENCES reservation(id)
+    CONSTRAINT fk_documentiMemorizzati_prenotazione FOREIGN KEY(id_prenota) REFERENCES Reservation(id)
     );
 
 
