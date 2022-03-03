@@ -105,7 +105,7 @@ create table Season
     type varchar(20),
     start date,
     end date,
-    aumento_percentuale int,
+    PercentIncrease int,
 
     -- chiave esterna
     Hotel varchar(20),
