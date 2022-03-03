@@ -52,23 +52,27 @@ public class MySQLReservation extends MySQLConnect implements MySQLgetHotelNameB
 		return al;
 	}
 	
-	public boolean addReservation(String name, String room, String checkin, String checkout, String pckg) {
+	public boolean addReservation(int id, Reservation res) {
 		try {
 			PreparedStatement pss = conn.prepareStatement("select max(id) as id from Reservation");
 			ResultSet rs = pss.executeQuery();
-			int id = -1;
+			int ReservationId = -1;
 			if ( rs != null) {
 				rs.next();
-				id = rs.getInt("id") + 1;
+				ReservationId = rs.getInt("id") + 1;
 			}
 			rs.close();
 			
 			//get Hotel Name
 			pss = conn.prepareStatement("select Hotel from Room where Number= ?;");
-			pss.setString(1, room);
+			pss.setString(1, res.getRoomNum());
 			rs = pss.executeQuery();
 			rs.next();
 			String HotelName = rs.getString("Hotel");
+			
+			String checkin = res.getCheckIn();
+			String checkout = res.getCheckOut();
+			
 			
 			//Conversione del formato HTML:
 			//HTML ha come formato yyyy-mm-dd, bisogna convertirlo prima di inserire
@@ -80,6 +84,7 @@ public class MySQLReservation extends MySQLConnect implements MySQLgetHotelNameB
 			DateTimeFormatter nformat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 			LocalDate Datecheckin = LocalDate.parse(checkin,oformat);
 			LocalDate Datecheckout = LocalDate.parse(checkout,oformat);
+
 			
 			checkin = Datecheckin.format(nformat).toString();
 			checkout = Datecheckout.format(nformat).toString();
@@ -89,21 +94,13 @@ public class MySQLReservation extends MySQLConnect implements MySQLgetHotelNameB
 					+ " VALUES (?, ?, ?, ?, STR_TO_DATE( ?,  '%d-%m-%Y'), STR_TO_DATE( ?, '%d-%m-%Y' ) , ? )");
 			
 			
-			
-			
-			System.out.println("INSERT INTO Reservation (Name, id, Hotel, Number, Check_In, Check_Out, Package) "
-					+ " VALUES ("+name+", "+id+", "+HotelName+", "+room+", STR_TO_DATE( "+checkin+",  '%d-%m-%Y'), STR_TO_DATE( "+checkout+", '%d-%m-%Y' ) , "+ pckg +" )");
-			
-			
-			
-			
-			psi.setString(1, name);
-			psi.setInt(2, id);
+			psi.setString(1, res.getCustomerName());
+			psi.setInt(2, ReservationId);
 			psi.setString(3, HotelName);
-			psi.setString(4, room);
+			psi.setString(4, res.getRoomNum());
 			psi.setString(5, checkin);
 			psi.setString(6, checkout);
-			psi.setString(7, pckg);
+			psi.setString(7, res.getPckg());
 			psi.execute();
 			return true;
 			
