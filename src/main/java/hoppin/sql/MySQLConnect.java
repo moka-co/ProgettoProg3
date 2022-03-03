@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.Properties;
 
 public class MySQLConnect { 
-	String pathToConfig = "/home/kurush/prog/eclipse-workspace/hoppin/";
+	String pathToConfig = "C:/Users/39347/eclipse-workspace/hoppin/";
 	Connection conn = null;
 	private String passw;
 	private String user;
@@ -19,9 +19,8 @@ public class MySQLConnect {
 			prop.load(config);
 			
 			this.user= prop.getProperty("db.user");
-	        this.passw = prop.getProperty("db.pass");
+	        this.passw = prop.getProperty("db.passw");
 	        this.dburl= "jdbc:mysql://" + prop.getProperty("db.url");
-	        
 	        if ( this.user.equals("") || this.passw.equals("") || this.dburl.equals("jdbc:mysql://")) {
 	        	System.out.println("Configuration file isn't correct");
 	        	throw new IOException();

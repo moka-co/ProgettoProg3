@@ -32,7 +32,7 @@ public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById 
 					+ "	from Reservation"
 					+ "		INNER JOIN Room ON Room.Num = Reservation.RoomNum"
 					+ "		INNER JOIN PriceList ON Room.Type=PriceList.RoomType"
-					+ "		WHERE Reservation.HotelName= ? ;"
+					+ "		WHERE Reservation.Hotel= ? ;"
 					);
 			ps.setString(1, HotelName);
 			rs = ps.executeQuery();
