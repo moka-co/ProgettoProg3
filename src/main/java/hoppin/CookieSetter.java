@@ -2,10 +2,11 @@ package hoppin;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import hoppin.sql.MySQLCookie;
 
 public class CookieSetter {
 	public CookieSetter(HttpServletResponse response, String user){
-		MySQLConnect db = new MySQLConnect();
+		MySQLCookie db = new MySQLCookie();
 		int id = db.getId(user);
 		db.disconnect();
 		

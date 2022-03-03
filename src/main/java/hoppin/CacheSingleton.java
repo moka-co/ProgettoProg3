@@ -7,6 +7,8 @@ public class CacheSingleton {
 	private static CacheSingleton id = null;
 	private int singleValue;
 	private List<Integer> values;
+	private String RoomTypeId;
+	private String EtoSeason;
 	
 	public CacheSingleton() {
 		this.values = new ArrayList<Integer>();
@@ -58,5 +60,11 @@ public class CacheSingleton {
 	
 	public void setSingleValue(int x) { this.singleValue = x; }
 	public int getSingleValue() {return this.singleValue; }
+	
+	public void setRoomTypeId(String str) { RoomTypeId=str; }
+	public String getRoomTypeId() {return this.RoomTypeId; }
+	
+	public void setEtoSeason(String eto) { EtoSeason=eto; }
+	public String getEtoSeason() {return EtoSeason; }
 
 }

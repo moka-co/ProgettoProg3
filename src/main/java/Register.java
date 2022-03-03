@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import hoppin.MySQLConnect;
+import hoppin.sql.MySQLAuth;
 
 //Classe da rifare
 
@@ -29,7 +29,7 @@ public class Register extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
-		MySQLConnect db = new MySQLConnect();
+		MySQLAuth db = new MySQLAuth();
 		String name = request.getParameter("name");
 		String user = request.getParameter("email");
 		String passw = request.getParameter("password");

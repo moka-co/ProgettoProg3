@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@ page import="hoppin.*" %>
+    <%@ page import="hoppin.sql.MySQLCookie" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,7 +24,7 @@ for (Cookie aCookie : cookies) {
 	if (name.equals("id")){
 		String value = aCookie.getValue();
 		int i = Integer.valueOf(value);
-		MySQLConnect db = new MySQLConnect();
+		MySQLCookie db = new MySQLCookie();
 		Firstname = db.getNamebyId(i);
 		db.disconnect();
 		

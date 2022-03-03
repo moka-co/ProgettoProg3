@@ -1,23 +1,25 @@
-import hoppin.*;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import hoppin.CacheSingleton;
+import hoppin.Reservation;
+
+import hoppin.sql.MySQLReservation;
+
+import hoppin.factory.AbstractFactory;
+import hoppin.factory.ReservationFactory;
+
 import hoppin.builder.ReservationBuilder;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import hoppin.factory.AbstractFactory;
-import hoppin.factory.ReservationFactory;
-
 
 public class ReservationManagement extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-    public ReservationManagement() {
-        super();
-    }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -33,7 +35,7 @@ public class ReservationManagement extends HttpServlet {
 		
 		//________________
 		
-		MySQLConnect db = new MySQLConnect();
+		MySQLReservation db = new MySQLReservation();
 		
 		rlist = db.getReservationList(id);
 		
@@ -72,11 +74,11 @@ public class ReservationManagement extends HttpServlet {
 				System.out.println("Error");
 				doGet(request,response);
 				return;
-			} */
+			} CONTROLLARE SE HO MESSO PURE LE PARTI RIGA DA 74 a 77 */ 
 			
 			AbstractFactory factory = new ReservationFactory();
 		    int id = ((ReservationFactory) factory).makeCookieGetter(request).getIdbyCookies();
-			MySQLConnect db = new MySQLConnect();
+			MySQLReservation db = new MySQLReservation();
 			boolean result = db.addReservation(id, res);
 			db.disconnect();
 				
@@ -93,13 +95,14 @@ public class ReservationManagement extends HttpServlet {
 		}
 		
 		if ( request.getParameter("DeleteReservation") != null) {
-			MySQLConnect db = new MySQLConnect();
+			MySQLReservation db = new MySQLReservation();
 			db.deleteReservation(cache.getSingleValue());
+			db.disconnect();
 			cache.setSingleValue(-1);
 		}
 		
 		if ( request.getParameter("ConfirmEditReservation") != null ) {
-			MySQLConnect db = new MySQLConnect();
+			MySQLReservation db = new MySQLReservation();
 			
 			String name = request.getParameter("name");
 			String room = request.getParameter("room");
@@ -108,6 +111,7 @@ public class ReservationManagement extends HttpServlet {
 			String pckg = request.getParameter("package");
 			Reservation newReservation = new Reservation(name, cache.getSingleValue(), room, checkin, checkout, pckg);
 			db.editReservation(newReservation);
+			db.disconnect();
 			
 			doGet(request,response);
 		}

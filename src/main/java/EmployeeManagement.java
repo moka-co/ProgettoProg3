@@ -2,6 +2,7 @@
 
 import jakarta.servlet.ServletException;
 import hoppin.factory.EmployeeFactory;
+import hoppin.sql.MySQLEmployee;
 import hoppin.factory.AbstractFactory;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,7 +16,6 @@ import java.util.List;
 
 import hoppin.CacheSingleton;
 import hoppin.Employee;
-import hoppin.MySQLConnect;
 
 
 @WebServlet("/EmployeeManagement")
@@ -45,14 +45,13 @@ public class EmployeeManagement extends HttpServlet {
         	
         }
         
-		MySQLConnect db = new MySQLConnect();
+		MySQLEmployee db = new MySQLEmployee();
 
 		//Cookie sempre diverso da null, altrimenti AuthFilter se ne accorge e rimanda ad Authentication
 		AbstractFactory factory = new EmployeeFactory();
-		int i = ((EmployeeFactory) factory).makeCookieGetter(request)
-											.getIdbyCookies();
+		int i = ((EmployeeFactory) factory).makeCookieGetter(request).getIdbyCookies();
 		
-		//Va ripensato anche la responsabilità di db.getEmployeeList, 
+		//Va ripensato anche la responsabilita' di db.getEmployeeList, 
 		//Infatti secondo me non dovrebbe essere lei a costruire ArrayList<Employee>
 		ArrayList<Employee> elist = db.getEmployeeList(i);
 		db.disconnect();
@@ -77,13 +76,13 @@ public class EmployeeManagement extends HttpServlet {
 											.getIdbyCookies();
 		
 		if ( request.getParameter("DeleteEmployee") != null) {
-			MySQLConnect db = new MySQLConnect();
+			MySQLEmployee db = new MySQLEmployee();
 			cache = CacheSingleton.getInstance();
 			List<Integer> li = cache.getList();
 			if ( li != null)
 				db.deleteEmployee(li);
 			else
-				System.out.println("li è null!");
+				System.out.println("li e' null!");
 			db.disconnect();
 		}
 		
@@ -122,7 +121,7 @@ public class EmployeeManagement extends HttpServlet {
 		}
 		
 		if ( request.getParameter("AddEmployee") != null) {
-			MySQLConnect db = new MySQLConnect();
+			MySQLEmployee db = new MySQLEmployee();
 			ArrayList<Employee> elist = db.getEmployeeList(i);
 			
 			
@@ -133,14 +132,13 @@ public class EmployeeManagement extends HttpServlet {
 		
 		
 		if ( request.getParameter("ConfirmAddEmployee") != null) {
-			System.out.println(request.getParameter("ConfirmAddEmployee"));
 			String user = request.getParameter("email");
 			String passw = request.getParameter("password");
 			String nome = request.getParameter("nome");
 			
 			
 			if ( user != null && passw != null && nome != null) {
-				MySQLConnect db = new MySQLConnect();
+				MySQLEmployee db = new MySQLEmployee();
 				boolean res = db.addEmployee(nome, user, passw, i);
 				
 				if ( res == true) {
@@ -155,7 +153,6 @@ public class EmployeeManagement extends HttpServlet {
 			//response.sendRedirect("/hoppin/EmployeeManagement.jsp");
 			//doGet(request, response);
 		}
-		//doGet(request, response);
 	}
 
 }

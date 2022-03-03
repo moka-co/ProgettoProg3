@@ -10,9 +10,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import hoppin.CacheSingleton;
-import hoppin.MySQLConnect;
 import hoppin.PriceList;
 import hoppin.Season;
+
+import hoppin.sql.MySQLFinance;
+
 import hoppin.factory.AbstractFactory;
 import hoppin.factory.FinanceFactory;
 
@@ -32,10 +34,11 @@ public class FinanceManagement extends HttpServlet {
 		int id = ((FinanceFactory) factory).makeCookieGetter(request).getIdbyCookies();
 		
 		
-		MySQLConnect db = new MySQLConnect();
+		MySQLFinance db = new MySQLFinance();
 		ArrayList<Integer> params = db.getTotProfit(id); //params = parametri
 		ArrayList<PriceList> pricelist = db.getPriceList(id);
 		ArrayList<Season> seasonlist = db.getSeason(id);
+		db.disconnect();
 		
 		HttpSession session=request.getSession();
 		session.setAttribute("sumAllPrice", params.get(0));
@@ -49,7 +52,7 @@ public class FinanceManagement extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		MySQLConnect db = new MySQLConnect();
+		MySQLFinance db = new MySQLFinance();
 		CacheSingleton cache = CacheSingleton.getInstance();
 		
 		AbstractFactory factory = new FinanceFactory();

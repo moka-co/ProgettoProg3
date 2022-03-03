@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import hoppin.*;
+import hoppin.sql.MySQLAuth;
 import hoppin.factory.AbstractFactory;
 import hoppin.factory.AuthFactory;
 
@@ -41,11 +41,12 @@ public class Authentication extends HttpServlet {
 		String user = request.getParameter("email");
 		String passw = request.getParameter("password");
 
-		MySQLConnect db = new MySQLConnect();
+		//MySQLConnect db = new MySQLConnect();
 			
 		//_________________________________________
 		
 		if ( ! user.equals("") && ! passw.equals("")) {
+			MySQLAuth db = new MySQLAuth();
 			boolean auth = db.login(user, passw);
 			if ( auth == true) {
 				
