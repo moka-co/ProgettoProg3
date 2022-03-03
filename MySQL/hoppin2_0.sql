@@ -140,9 +140,8 @@ alter table Reservation
 add Number int,
 add N_Card varchar(20) ,
 add Hotel varchar(20),
-add CONSTRAINT FK_prenota_pagamenti FOREIGN KEY (N_Card) REFERENCES paymentTransaction (N_Card),
-add CONSTRAINT FK_prenota_room FOREIGN KEY (Hotel,Number) REFERENCES room (Hotel,Number),
-add CONSTRAINT FK_prenota_cliente FOREIGN KEY (Name) REFERENCES customer (completeName);
+add CONSTRAINT FK_prenota_pagamenti FOREIGN KEY (N_Card) REFERENCES PaymentTransaction (N_Card),
+add CONSTRAINT FK_prenota_room FOREIGN KEY (Hotel,Number) REFERENCES Room (Hotel,Number);
 
 alter table Reservation add DocumentNumber varchar(20),
 add CONSTRAINT FK_prenota_documenti FOREIGN KEY(DocumentNumber) REFERENCES Documents (number);
@@ -155,7 +154,7 @@ add CONSTRAINT FK_prenota_documenti FOREIGN KEY(DocumentNumber) REFERENCES Docum
 
 Alter TABLE Package add Hotel varchar(20) ,
 add CONSTRAINT PK_Package PRIMARY Key (Hotel,Name),
-add CONSTRAINT FK_Package_Hotel FOREIGN KEY (Hotel) REFERENCES hotel (Name);
+add CONSTRAINT FK_Package_Hotel FOREIGN KEY (Hotel) REFERENCES Hotel (Name);
 
 
 
