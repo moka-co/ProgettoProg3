@@ -156,6 +156,11 @@ Alter TABLE Package add Hotel varchar(20) ,
 add CONSTRAINT PK_Package PRIMARY Key (Hotel,Name),
 add CONSTRAINT FK_Package_Hotel FOREIGN KEY (Hotel) REFERENCES Hotel (Name);
 
+alter table Package drop column description;
+alter table Package add description text;
+
+
+
 
 
 
