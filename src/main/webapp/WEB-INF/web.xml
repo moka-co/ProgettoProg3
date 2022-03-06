@@ -14,8 +14,6 @@
     <servlet-name>Authentication</servlet-name>
     <url-pattern>/Authentication</url-pattern>
   </servlet-mapping>
-  
-  
   <servlet>
     <description></description>
     <display-name>DebugCookies</display-name>
@@ -36,8 +34,6 @@
     <servlet-name>Register</servlet-name>
     <url-pattern>/Register</url-pattern>
   </servlet-mapping>
-  
-  
   <filter>
     <display-name>AuthFilter</display-name>
     <filter-name>AuthFilter</filter-name>
@@ -46,22 +42,20 @@
   <filter-mapping>
     <filter-name>AuthFilter</filter-name>
     <url-pattern>/AuthFilter</url-pattern>
-    <url-pattern>/HomePage.jsp</url-pattern>
     
+    <url-pattern>/HotelInfoManagement</url-pattern>
+    <url-pattern>/HomePage.jsp</url-pattern>
     <url-pattern>/PackagesManagement</url-pattern>
     <url-pattern>/PackagesManagement.jsp</url-pattern>
-    
     <url-pattern>/ReservationManagement</url-pattern>
-     <url-pattern>/ReservationManagement.jsp</url-pattern>
-     
-     <url-pattern>/FinanceManagement</url-pattern>
-      <url-pattern>/FinanceManagement.jsp</url-pattern>
-      
-       <url-pattern>/EmployeeManagement.jsp</url-pattern>
-       <url-pattern>/EmployeeManagement</url-pattern>
+    <url-pattern>/ReservationManagement.jsp</url-pattern>
+    <url-pattern>/FinanceManagement</url-pattern>
+    <url-pattern>/FinanceManagement.jsp</url-pattern>
+    <url-pattern>/EmployeeManagement.jsp</url-pattern>
+    <url-pattern>/EmployeeManagement</url-pattern>
+
   </filter-mapping>
-  
-   <servlet>
+  <servlet>
     <description></description>
     <display-name>EmployeeManagement</display-name>
     <servlet-name>EmployeeManagement</servlet-name>
@@ -71,7 +65,6 @@
     <servlet-name>EmployeeManagement</servlet-name>
     <url-pattern>/EmployeeManagement</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <description></description>
     <display-name>FinanceManagement</display-name>
@@ -82,8 +75,7 @@
     <servlet-name>FinanceManagement</servlet-name>
     <url-pattern>/FinanceManagement</url-pattern>
   </servlet-mapping>
-  
-    <servlet>
+  <servlet>
     <description></description>
     <display-name>ReservationManagement</display-name>
     <servlet-name>ReservationManagement</servlet-name>
@@ -93,9 +85,7 @@
     <servlet-name>ReservationManagement</servlet-name>
     <url-pattern>/ReservationManagement</url-pattern>
   </servlet-mapping>
-  
-  
-    <servlet>
+  <servlet>
     <description></description>
     <display-name>PackagesManagement</display-name>
     <servlet-name>PackagesManagement</servlet-name>
@@ -104,5 +94,15 @@
   <servlet-mapping>
     <servlet-name>PackagesManagement</servlet-name>
     <url-pattern>/PackagesManagement</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>HotelInfoManagement</display-name>
+    <servlet-name>HotelInfoManagement</servlet-name>
+    <servlet-class>HotelInfoManagement</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>HotelInfoManagement</servlet-name>
+    <url-pattern>/HotelInfoManagement</url-pattern>
   </servlet-mapping>
 </web-app>

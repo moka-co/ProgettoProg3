@@ -69,7 +69,7 @@ td, th {
 </div>
 
 <div id="invisibleDiv2" hidden="hidden">
-		<p>Inserisci i dati della nuova prenotazione: </p>
+		<p>Inserisci i dati da modificare della prenotazione selezionata: </p>
        	 <form action="./ReservationManagement" method="post">
         	Nome Prenotazione <input type="text" name="name"></input> <br>
        	  Stanza <input type="text" name="room"></input> <br>

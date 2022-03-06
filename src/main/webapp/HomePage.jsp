@@ -1,6 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    <%@ page import="hoppin.sql.MySQLCookie" %>
+<%@ page language="java" contentType="text/html;" pageEncoding="UTF-8"%>
+
+    <%@ page import="hoppin.*,java.util.List,java.util.ArrayList" %>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,34 +10,15 @@
 </head>
 <body>
 
-<%!
-public String Firstname;
-%>
-
-<% 
-
-Cookie [] cookies = request.getCookies(); 
-
-//Cookie sempre diverso da null, altrimenti AuthFilter se ne accorge e rimanda ad Authentication
-
-for (Cookie aCookie : cookies) {
-	String name = aCookie.getName();
-	if (name.equals("id")){
-		String value = aCookie.getValue();
-		int i = Integer.valueOf(value);
-		MySQLCookie db = new MySQLCookie();
-		Firstname = db.getNamebyId(i);
-		db.disconnect();
-		
-	}
-}
-%>
-
-<h2>Benvenuto <% out.print(Firstname); %></h2>
+<h2>Benvenuto <c:out value="${username}"/> </h2>
 
 <div>
 	"Immagine Hotel" <br>
-	"Descrizione Hotel" <br>
+	Hotel <c:out value="${hotelInfo.name}"/> <br>
+	<br>
+	Indirizzo: Via <c:out value="${hotelInfo.via}"/>  <c:out value="${hotelInfo.city}"/> <c:out value="${hotelInfo.postcode}"/> <br>
+	Stelle: <c:out value="${hotelInfo.stars}"/> <br>
+	Descrizione: <c:out value="${hotelInfo.description}"/> <br>
 	<br>
 </div>
 <br>
