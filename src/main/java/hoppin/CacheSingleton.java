@@ -9,6 +9,7 @@ public class CacheSingleton {
 	private List<Integer> values;
 	private String RoomTypeId;
 	private String EtoSeason;
+	private String SelectdPckg;
 	
 	public CacheSingleton() {
 		this.values = new ArrayList<Integer>();
@@ -66,5 +67,8 @@ public class CacheSingleton {
 	
 	public void setEtoSeason(String eto) { EtoSeason=eto; }
 	public String getEtoSeason() {return EtoSeason; }
+	
+	public void setSelectedPackage(String st) { this.SelectdPckg = st; }
+	public String getSelectedPackage() { return this.SelectdPckg; }
 
 }

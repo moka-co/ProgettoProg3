@@ -102,6 +102,7 @@ public class ReservationManagement extends HttpServlet {
 		}
 		
 		if ( request.getParameter("ConfirmEditReservation") != null ) {
+			
 			MySQLReservation db = new MySQLReservation();
 			
 			String name = request.getParameter("name");

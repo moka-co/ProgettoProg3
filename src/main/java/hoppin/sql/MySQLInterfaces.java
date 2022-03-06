@@ -10,7 +10,7 @@ interface MySQLgetAccTypeById {
 		String AccType="";
 		
 		try {
-		PreparedStatement ps = conn.prepareStatement("select accType from employee where id = ?");
+		PreparedStatement ps = conn.prepareStatement("select accType from Employee where id = ?");
 		ps.setInt(1, id);
 		ResultSet rs = ps.executeQuery();
 		rs.next();
@@ -39,7 +39,7 @@ interface MySQLgetHotelNameById extends MySQLgetAccTypeById {
 				HotelName = rs.getString("Name");
 				
 			}else if (AccType.equals("Employee")) {
-				PreparedStatement ps = conn.prepareStatement("select Name from Hotel where OwnerId = (select sid from employee where id = ?) ");
+				PreparedStatement ps = conn.prepareStatement("select Name from Hotel where OwnerId = (select sid from Employee where id = ?) ");
 				ps.setInt(1, id);
 				ResultSet rs = ps.executeQuery();
 				rs.next();

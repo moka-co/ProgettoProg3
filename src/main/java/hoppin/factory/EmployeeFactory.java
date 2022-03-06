@@ -1,5 +1,5 @@
 package hoppin.factory;
 
-public class EmployeeFactory implements CookieFactory{
+public class EmployeeFactory implements CookieFactory {
 
 }

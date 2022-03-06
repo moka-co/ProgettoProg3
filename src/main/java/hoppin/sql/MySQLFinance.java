@@ -24,22 +24,28 @@ public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById 
 			String HotelName ="";
 			ResultSet rs;
 			PreparedStatement ps;
+			
+			int sumPrice = 0;
+			int totCount = 0;
+			
 			HotelName = this.getHotelNameById(conn, id);
 			
 			
 			//Query per prendere la somma del prezzo totale di ogni prenotazione e il numero di prenotazioni
 			ps = conn.prepareStatement(" select sum(PriceList.Price) as sumPrice, count(Reservation.id) as totCount"
 					+ "	from Reservation"
-					+ "		INNER JOIN Room ON Room.Num = Reservation.RoomNum"
-					+ "		INNER JOIN PriceList ON Room.Type=PriceList.RoomType"
-					+ "		WHERE Reservation.Hotel= ? ;"
+					+ "		INNER JOIN Room ON Room.Number = Reservation.Number"
+					+ "		INNER JOIN PriceList ON Room.Type=PriceList.type_room"
+					+ "		WHERE Reservation.Hotel = ? and Room.Hotel = ? and PriceList.Hotel = ?;"
 					);
-			ps.setString(1, HotelName);
-			rs = ps.executeQuery();
-			rs.next();
-			int sumPrice = rs.getInt("sumPrice");
-			int totCount = rs.getInt("totCount");
+			for (int i=1; i<4;i++)
+				ps.setString(i, HotelName);
 			
+			rs = ps.executeQuery();
+			if ( rs.next() ) {
+			sumPrice = rs.getInt("sumPrice");
+			totCount = rs.getInt("totCount");
+			}
 			//Aggiungi gli elementi trovati dalla Query all'array
 			res.add(sumPrice);
 			res.add(totCount);
@@ -47,6 +53,7 @@ public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById 
 			
 		}catch ( SQLException e) {
 			System.out.println(e);
+			e.printStackTrace();
 			res.add(-1); res.add(-1);
 		}
 		

@@ -53,7 +53,7 @@ public class Authentication extends HttpServlet {
 				AbstractFactory factory = new AuthFactory();
 				((AuthFactory) factory).makeCookieSetter(response,user);
 				
-				response.sendRedirect("/hoppin/HomePage.jsp");
+				response.sendRedirect("/hoppin/HotelInfoManagement");
 				
 			}else {
 				System.out.println("Utente non trovato");

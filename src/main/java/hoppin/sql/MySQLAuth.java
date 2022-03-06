@@ -19,7 +19,6 @@ public class MySQLAuth extends MySQLConnect {
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			int id = Integer.valueOf( rs.getString("id") );
-			System.out.println(id);
 			
 			return (id != 0);
 			
