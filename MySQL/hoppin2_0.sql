@@ -160,7 +160,12 @@ alter table Package drop column description;
 alter table Package add description text;
 
 
-
+create table HotelImages (
+	Hotel varchar(20),
+    Image longblob NOT NULL,
+    
+    CONSTRAINT FK_hotelImages_hotel FOREIGN KEY (Hotel) REFERENCES Hotel (Name)
+) 
 
 
 
