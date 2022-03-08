@@ -28,6 +28,7 @@ interface MySQLgetAccTypeById {
 
 interface MySQLgetHotelNameById extends MySQLgetAccTypeById {
 	public default String getHotelNameById(Connection conn, int id) { //Questo metodo e' richiamato da piu' metodi di questa classe
+		
 		String HotelName = "";
 		try {
 			String AccType = this.getAccTypeById(conn, id);

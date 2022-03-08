@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface CookieFactory extends AbstractFactory {
+	
 	public default CookieGetter makeCookieGetter(HttpServletRequest request) {
 		return new CookieGetter(request);
 	}
