@@ -165,41 +165,4 @@ create table HotelImages (
     Image blob NOT NULL,
     
     CONSTRAINT FK_hotelImages_hotel FOREIGN KEY (Hotel) REFERENCES Hotel (Name)
-) 
-
-
-
-
-
-
-
-
-
-
-
-/*
-INSERT INTO `hotel` (`Name`, `Via`, `City`, `Postcode`, `Stars`, `Balance`, `description`, `OwnerId`) VALUES
-('Hotel Belvedere ', 'Toledo,22', 'Napoli', '80234', 4, NULL, NULL, NULL),
-('Hotel Hoppo', 'Gramsci, 33', 'Roma', '1234', 5, NULL, NULL, NULL),
-INSERT INTO `room` (`Number`, `Type`, `Hotel`) VALUES
-(1, 'Singola', 'Hotel Belvedere '),
-(2, 'Matrimoniale', 'Hotel Belvedere '),
-(3, 'Tripla', 'Hotel Belvedere '),
-(4, 'Quadrupla', 'Hotel Belvedere '),
-(1, 'Singola', 'Hotel Hoppo '),
-(2, 'Matrimoniale', 'Hotel Hoppo '),
-(3, 'Tripla', 'Hotel Hoppo '),
-(4, 'Quadrupla', 'Hotel Hoppo '),
-
-INSERT INTO `Cliente` (`id`, `completeName`, `email`, `passw_hash`, `sid`) VALUES
-(1, 'Mario Rossi', 'mario.rossi@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', NULL),
-(4, 'Sara Rossi', 'sara.rossi@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', NULL),
-(5, 'Sara Chiaglio', 'sara.chiaglio@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', NULL),
-(6, 'Mia Chiaglio', 'mia.chiaglio@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', NULL);
-
-INSERT INTO `Dipendente` (`id`, `completeName`, `email`, `passw_hash`, `accType`, `sid`) VALUES
-(2, 'Mario Tortora', 'mario.tortora@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', 'Dipendente', NULL),
-(3, 'Raffaele Tortora', 'raffaele.tortora@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', 'Proprietario', NULL),
-(7, 'Raffaella Vano', 'raffella.vano@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', 'Dipendente', NULL),
-(8, 'Raffaella Vart', 'raffella.vano@gmail.it', '06db9ac82dfc4c9146de64b669a675a3', 'Proprietario', NULL);
-*/
+);
