@@ -1,7 +1,6 @@
 package hoppin.sql;
 import hoppin.HotelInfo;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -141,6 +140,64 @@ public class MySQLHotelInfo extends MySQLCookie implements MySQLgetHotelNameById
 		
 		
 		return ids;
+	}
+	
+	public void editHotelInfo(HotelInfo info) {
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("Update Hotel SET ");
+		String query; 
+		
+		String Hname = info.getName();
+		
+		int p = 1;
+		if ( info.getVia() != null) {
+			sb.append("Via = " +  '"' + info.getVia() + '"' );
+			p++;
+		}
+		
+		if ( info.getCity() != null ) {
+			if ( p > 1) {
+				sb.append(", ");
+			}
+			sb.append("City = " + '"' +  info.getCity() + '"' );
+			p++;
+		}
+		
+		if ( info.getPostcode() != null ) {
+			if ( p > 1) {
+				sb.append(", ");
+			}
+			sb.append("Postcode = " + '"' + info.getPostcode() + '"' );
+			p++;
+		}
+		
+		if ( info.getStars() != 0 ) {
+			if ( p > 1) {
+				sb.append(", ");
+			}
+			sb.append("Stars = " + '"' + info.getStars() + '"'  );
+			p++;
+		}
+		
+		if ( info.getDescription() != null) {
+			if ( p > 1) {
+				sb.append(", ");
+			}
+			sb.append("Description = " + '"' + info.getDescription() + '"' ) ;
+			p++;
+		}
+		
+		sb.append(" WHERE Name = " + '"' + Hname + '"' );
+		query = sb.toString();
+		
+		System.out.println(query);
+		try {
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.execute();
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
 	}
 	
 }

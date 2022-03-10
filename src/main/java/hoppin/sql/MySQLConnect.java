@@ -27,6 +27,16 @@ public class MySQLConnect {
 	        	throw new IOException();
 	        }
 	            
+	        /*
+	        try {
+	        	Class.forName(“com.mysql.jdbc.Driver”);
+	        } catch ( Exception e) {
+	        	System.out.println(e);
+	        } 
+	        
+	        */
+	        
+	        
 			this.conn = DriverManager.getConnection(this.dburl, this.user, this.passw); //Connettiti al database
 			
 		} catch (IOException e) { //Errore se non e' stato possibile aprire o leggere dal file di configurazione

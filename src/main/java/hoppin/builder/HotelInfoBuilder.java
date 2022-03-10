@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import hoppin.HotelInfo;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class HotelInfoBuilder {
 	HotelInfo hotel = new HotelInfo();
@@ -15,6 +16,20 @@ public class HotelInfoBuilder {
 			.postcode(rs.getString("Postcode"))
 			.stars(rs.getInt("Stars"))
 			.description(rs.getString("description"));
+	}
+	
+	public HotelInfoBuilder(HttpServletRequest request) {
+		this.via(request.getParameter("via"))
+			.city(request.getParameter("city"))
+			.postcode(request.getParameter("postcode"))
+			.description(request.getParameter("description"));
+		
+		
+		if ( request.getParameter("stars") != null) {
+			stars( Integer.valueOf(request.getParameter("stars")) );
+		}else {
+			stars(0);
+		}
 	}
 	
 	public HotelInfo toHotelInfo() {

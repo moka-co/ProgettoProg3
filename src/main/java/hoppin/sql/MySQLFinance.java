@@ -105,7 +105,7 @@ public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById 
 		
 		try {
 			String Hotel = this.getHotelNameById(conn, id);
-			PreparedStatement ps = conn.prepareStatement("update PriceList set Price = ? where RoomType = ? and Hotel = ?");
+			PreparedStatement ps = conn.prepareStatement("update PriceList set Price = ? where Type_Room = ? and Hotel = ?");
 			ps.setInt(1, price);
 			ps.setString(2, RoomType);
 			ps.setString(3, Hotel);

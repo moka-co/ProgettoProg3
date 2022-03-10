@@ -21,6 +21,7 @@ import java.util.Properties;
 import hoppin.factory.HotelInfoFactory;
 import hoppin.sql.MySQLHotelInfo;
 import hoppin.HotelInfo;
+import hoppin.builder.HotelInfoBuilder;
 
 @MultipartConfig
 public class HotelInfoManagement extends HttpServlet {
@@ -54,6 +55,19 @@ public class HotelInfoManagement extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		if ( request.getParameter("ConfirmEditInfo") != null) {
+			MySQLHotelInfo db = new MySQLHotelInfo();
+			HotelInfoFactory factory = new HotelInfoFactory();
+			int id = factory.makeCookieGetter(request).getIdbyCookies();
+			
+			HotelInfoBuilder hib = new HotelInfoBuilder(request);
+			String Hname = db.getHotelNameById(id);
+			hib.name(Hname);
+			
+			HotelInfo hi = hib.toHotelInfo();
+			
+			db.editHotelInfo(hi);
+		}
 
 		if ( request.getParameter("AddImage") != null ) {
 			MySQLHotelInfo db = new MySQLHotelInfo();
