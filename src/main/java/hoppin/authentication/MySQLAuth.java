@@ -5,6 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * 
+ * Estende l'interfaccia {@link hoppin.util.sql.MySQLConnect}
+ * implementa il metodo {@link #login(String, String)} 
+ * che verifica se i dati di login sono corretti
+ */
+
 public class MySQLAuth extends MySQLConnect {
 	public MySQLAuth(){
 		super();
@@ -16,6 +23,12 @@ public class MySQLAuth extends MySQLConnect {
 		id = i;
 	}
 
+	/**
+	 * 
+	 * @param user stringa inserita nel form di input
+	 * @param password inserita
+	 * @return {@code true} se esiste una corrispondenza nel database, altrimenti {@code false}
+	 */
 
 	public boolean login(String user, String passw) { 
 		try {

@@ -104,7 +104,7 @@ public class ReservationManagement extends HttpServlet {
 				}
 				
 			};
-			doGet(request,response);
+			response.sendRedirect("/hoppin/ReservationManagement");
 			break;
 		}
 		

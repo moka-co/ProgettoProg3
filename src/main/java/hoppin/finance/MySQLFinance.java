@@ -133,7 +133,7 @@ public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById 
 	
 	public boolean deleteElementToPriceList(String RoomType) {
 		boolean res = true;
-		String query = "delete from PriceList where Hotel = ? and RoomType = ?";
+		String query = "delete from PriceList where Hotel = ? and Type_Room = ?";
 		
 		try {
 			String Hotel = this.getHotelNameById(conn, id);
@@ -236,13 +236,6 @@ public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById 
 			return false;
 		}
 		
-		/*
-		String dates [] = etoSeason.split("&");
-		String OLDstartDate = dates[0];
-		String OLDendDate = dates[1];
-		
-		*/
-		
 		try {
 			String HotelName = this.getHotelNameById(conn, id);
 			
@@ -251,66 +244,10 @@ public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById 
 			
 			PreparedStatement ps = fqb.makeStatement();
 			
-			ps.execute();
-			
-			/* Da cancellare dopo aver fatto i test:
-			 * 
-			StringBuilder sb = new StringBuilder();
-			sb.append("UPDATE Season SET");
-			boolean prec = false;
-			if ( ! season.equals("")) {
-				sb.append("Type = ?");
-				prec = true;
-			}
-			if (! startDate.equals("") ) {
-				if ( prec ) {
-					sb.append(",");
-				}
-				sb.append(" Start = ? ");
-				prec = true;
-			}
-			if (! endDate.equals("") ) {
-				if ( prec ) {
-					sb.append(",");
-				}
-				sb.append(" End = ? ");
-				prec = true;
-			}
-			if (incr != 0) {
-				if ( prec ) {
-					sb.append(",");
-				}
-				sb.append(" PercentIncrease = ?");
-				prec = true;
+			if ( ps != null) {
+				ps.execute();
 			}
 			
-			sb.append(" WHERE Hotel = ? and Start = ? and End = ?");
-			String query = sb.toString();
-			PreparedStatement ps = conn.prepareStatement(query);
-			int i=1;
-			if ( ! season.equals("")) {
-				ps.setString(1, season);
-				i++;
-			}
-			if ( ! startDate.equals("")) {
-				ps.setString(i, startDate);
-				i++;
-			}
-			if ( ! endDate.equals("") ) {
-				ps.setString(i, endDate);
-				i++;
-			}
-			if ( incr != 0) {
-				ps.setInt(i, incr);
-				i++;
-			}
-			ps.setString(i, HotelName);
-			i++;
-			ps.setString(i, OLDstartDate);
-			i++;
-			ps.setString(i, OLDendDate);
-			
-			*/
 			
 		} catch( SQLException e) {
 			System.out.println(e);

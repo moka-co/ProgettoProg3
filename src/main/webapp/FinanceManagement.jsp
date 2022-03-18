@@ -64,7 +64,7 @@ Profitti totali: <c:out value="${sumAllPrice}"/> <br>
 		<form action="./FinanceManagement" method="post">
         	Tipo di Stanza <input type="text" name="roomType"></input> <br>
        		Prezzo <input type="text" name="price"></input> <br>
-		<input name="ConfirmAddEtoPriceList" type="submit" value="Conferma Modifica Prenotazione"></input> <br>
+		<input name="ConfirmAddEtoPriceList" type="submit" value="Conferma aggiunta"></input> <br>
 		</form>
 	</div>
 </div>

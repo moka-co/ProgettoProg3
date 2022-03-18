@@ -69,6 +69,8 @@ public class FinanceQueryBuilder extends QueryBuilder {
 			prec = true;
 		}
 		
+		sb.append(" WHERE Hotel = ? and Start = ? and End = ?");
+		
 		query = sb.toString();
 		return this.toString();
 	}

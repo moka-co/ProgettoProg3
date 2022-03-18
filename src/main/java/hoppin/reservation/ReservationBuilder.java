@@ -81,6 +81,10 @@ public class ReservationBuilder {
 	}
 	
 	public String format(String p) {
+		if ( p == null || p.equals("")) {
+			return "";
+		}
+		
 		LocalDate date = LocalDate.parse(p,oldFormat);
 		
 		return date.format(newFormat).toString();

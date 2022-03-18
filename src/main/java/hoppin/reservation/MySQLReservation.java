@@ -85,75 +85,12 @@ public class MySQLReservation extends MySQLConnect implements MySQLgetHotelNameB
 		
 		ReservationQueryBuilder rqb = new ReservationQueryBuilder(res, conn);
 		
-		try {
-			/*
-			StringBuilder sb = new StringBuilder();
-	
-			sb.append("UPDATE Reservation SET ");
-			int p = 0;
-			if ( res.getRoomNum() != "") {
-				sb.append("Number = ? ");
-				p++;
-			}
-			if ( res.getCheckIn() != "") {
-				if ( p != 0) {
-					sb.append(", ");
-				}
-				sb.append("Check_in = STR_TO_DATE(? , '%d-%m-%Y')");
-				p++;
-			}
+		try {	
+			PreparedStatement ps = rqb.makeStatement();
 			
-			if ( res.getCheckOut() != "") {
-				if ( p != 0) {
-					sb.append(", ");
-				}
-				sb.append("Check_out = STR_TO_DATE(? , '%d-%m-%Y') ");
-				p++;
-			}
-			
-			if ( res.getPckg() != "") {
-				sb.append("Package = ?");
-				p++; 
-			}
-			
-			sb.append(" WHERE id = ?");
-			
-			String query = sb.toString();
-			
-			PreparedStatement pss = conn.prepareStatement(query);
-			
-			*/
-			
-			PreparedStatement pss = rqb.makeStatement();
-			
-			/*
-			int pstack = 1;
-			if ( res.getRoomNum() != "") {
-				pss.setString(pstack, res.getRoomNum());
-				pstack++;
-			}
-			if ( res.getCheckIn() != "") {
-				pss.setString(pstack, res.getCheckIn());
-				pstack++;
-			}
-			
-			if ( res.getCheckOut() != "") {
-				pss.setString(pstack, res.getCheckOut());
-				pstack++;
-			}
-			if ( res.getPckg() != "") {
-				pss.setString(pstack, res.getPckg());
-				pstack++;
-			}
-			
-			pss.setInt(pstack, res.getId());
-			if ( pstack == 1)
-				return false;
-			*/
-			
-			if ( pss != null) {
-				pss.executeUpdate();
-				pss.close();
+			if ( ps != null) {
+				ps.executeUpdate();
+				ps.close();
 			}
 			
 		} catch ( SQLException e) {
@@ -167,11 +104,11 @@ public class MySQLReservation extends MySQLConnect implements MySQLgetHotelNameB
 	public boolean deleteReservation(int resId) {
 		try {
 			
-			PreparedStatement pss = conn.prepareStatement("delete from Reservation where id = ? ");
-			pss.setInt(1, resId);
-			pss.execute();
+			PreparedStatement ps = conn.prepareStatement("delete from Reservation where id = ? ");
+			ps.setInt(1, resId);
+			ps.execute();
 		
-			pss.close();
+			ps.close();
 		
 		} catch ( SQLException e) {
 			System.out.println(e);

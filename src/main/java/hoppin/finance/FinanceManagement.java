@@ -111,18 +111,20 @@ public class FinanceManagement extends HttpServlet {
         	};
         	
         	
-        	doGet(request, response);
+        	response.sendRedirect("/hoppin/FinanceManagement");
         	break;
         	
         }
         
         case "DeleteRoom" :  {
+        	System.out.println("elimina");
         	strategy = () -> {
         		if ( cache.getRoomTypeId().equals("") == false ) { //C'è qualcosa nella cache
 					String roomType = cache.getRoomTypeId();
 					db.deleteElementToPriceList(roomType);
 				}
         	};
+        	break;
         	
         }
         
@@ -137,7 +139,7 @@ public class FinanceManagement extends HttpServlet {
 				
 				db.addEtoSeason(season, startDate, endDate, incr);
         	};
-        
+        	response.sendRedirect("/hoppin/FinanceManagement");
         	break;
         }
         case "ConfirmEditEtoSeason" : {

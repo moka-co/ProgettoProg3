@@ -77,7 +77,7 @@ public class PackagesManagement extends HttpServlet {
 				db.addPackage(Npack, DPack, PPack);
 				
 			};
-			
+			response.sendRedirect("/hoppin/PackagesManagement");
 			break;
 		}
 		
@@ -110,6 +110,7 @@ public class PackagesManagement extends HttpServlet {
 				}
 			};
 			
+			response.sendRedirect("/hoppin/PackagesManagement");
 			break;
 		}
 		
@@ -117,10 +118,11 @@ public class PackagesManagement extends HttpServlet {
 			doGet(request, response);
 			break;
 		}
-		}
 		
-		db.disconnect();
+		} //end switch
+		
 		strategy.run();
+		db.disconnect();
 		
 	}	
 

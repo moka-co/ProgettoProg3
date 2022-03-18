@@ -8,9 +8,25 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
+/**
+ * 
+ * Implementa il design pattern Strategy, utilizzando
+ * un interfaccia funzionale
+ *
+ */
+
 interface AuthStrategy {
 	boolean run();
 }
+
+/**
+ * 
+ * Gestisce le richieste HTTP GET e POST nel sottosistema di autenticazione
+ * Usa le classi {@link AuthFactory}, {@link MySQLAuth} e la Java Server Page <mono>index.jsp</mono>
+ * Redireziona a {@link hoppin.hotelinfo.HotelInfoManagement} oppure {@link Authentication}
+ * 
+ * Definisce dinamicamente <mono>AuthStrategy</mono> utilizzando funzioni lambda e funzioni anonime
+ */
 
 @WebServlet("/Authentication")
 public class Authentication extends HttpServlet {
@@ -21,9 +37,10 @@ public class Authentication extends HttpServlet {
     }
 
 
+    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		response.sendRedirect("/hoppin/Index.jsp");
+		response.sendRedirect("/hoppin/index.jsp");
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -36,20 +53,16 @@ public class Authentication extends HttpServlet {
 		boolean stringNotEmpty = ! user.equals("") && ! user.equals("");
 
 		
-		if ( stringNotNull && stringNotEmpty ) {
+		if ( stringNotNull && stringNotEmpty ) { //Se user e password non sono ne vuote ne null
 			
-			/*strategy verifica se i dati inseriti sono corretti
-			  e solo in tal caso setta il cookie
-			  poi chiude la connessione col database e ritorna
-			 * 
-			 */
+			//Verifica se i dati inseriti sono corretti e in tal caso imposta un cookie
 			
 			AuthStrategy strategy = () -> {
-				MySQLAuth db = new MySQLAuth();
+				AuthFactory factory = new AuthFactory();
+				MySQLAuth db = (MySQLAuth) factory.makeDatabaseConnect(request);
 				boolean auth = db.login(user, passw);
 				
 				if ( auth ) {
-					AuthFactory factory = new AuthFactory();
 					factory.makeCookieSetter(response,user);
 				}
 				
@@ -57,16 +70,16 @@ public class Authentication extends HttpServlet {
 				return auth;
 			};
 			
-			if ( strategy.run() == true ) {
+			if ( strategy.run() == true ) { //Login effettuato con successo
 				response.sendRedirect("/hoppin/HotelInfoManagement");
-			}else {
-				System.out.println("Utente non trovato");
+			
+			}else { //Rimanda ad Authentication
 				response.sendRedirect("/hoppin/Authentication");
 			}
 
 			
-		}
+		} // fine if
 	
-	}
+	} // fine doPost
 
-}
+} // fine classe
