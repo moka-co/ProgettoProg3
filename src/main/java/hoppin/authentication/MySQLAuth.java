@@ -13,11 +13,11 @@ import java.sql.SQLException;
  */
 
 public class MySQLAuth extends MySQLConnect {
-	public MySQLAuth(){
-		super();
-	}
 	
-	
+	/**
+	 * 
+	 * @param i ovvero l'id dell'utente autenticato nella piattaforma
+	 */
 	public MySQLAuth(int i) {
 		super();
 		id = i;
@@ -26,16 +26,16 @@ public class MySQLAuth extends MySQLConnect {
 	/**
 	 * 
 	 * @param user stringa inserita nel form di input
-	 * @param password inserita
+	 * @param passw password inserita 
 	 * @return {@code true} se esiste una corrispondenza nel database, altrimenti {@code false}
+	 * @throws java.sql.SQLException
 	 */
 
 	public boolean login(String user, String passw) { 
 		try {
-			// ps = PreparedStatement
-			// rs = ResultSet
+
 			String query = "Select id from  Employee where email = ? and passw_hash = md5(?)";
-			PreparedStatement ps = conn.prepareStatement(query);
+			PreparedStatement ps = conn.prepareStatement(query); 
 			ps.setString(1, user);
 			ps.setString(2, passw);
 			ResultSet rs = ps.executeQuery();

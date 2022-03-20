@@ -7,10 +7,20 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import hoppin.util.sql.MySQLgetHotelNameById;
 
-
+/**
+ * 
+ * Effettua delle operazioni CRUD (Create, Read, Update, Delete) su database MYSQL
+ * legate al sottosistema Finance di hoppin.
+ * Si collega al database estendendo la superclasse {@link hoppin.util.sql.MySQLConnect}
+ *
+ */
 public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById {
 	int id = 0;
 	
+	/**
+	 * 
+	 * @param id dell'utente autenticato
+	 */
 	public MySQLFinance(int id) {
 		this.id = id;
 	}
@@ -18,6 +28,12 @@ public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById 
 		super();
 	}
 	
+	/**
+	 * 
+	 * @return un arrylist di due interi, il primo elemento è il profitto totale, 
+	 * il secondo è il numero di prenotazoni totali
+	 * @throws java.sql.SQLException
+	 */
 	public ArrayList<Integer> getTotProfit() {
 		int sumPrice = 0;
 		int totCount = 0;
@@ -61,7 +77,11 @@ public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById 
 		return res;
 	}
 	
-	
+	/**
+	 * 
+	 * @return un arraylist di prezziari
+	 * @throws java.sql.SQLException
+	 */
 	public ArrayList<PriceList> getPriceList(){ //PriceList = prezziario
 		ArrayList<PriceList> al = new ArrayList<PriceList>(); //al = array list
 		String query = "select Type_Room, Price from PriceList where Hotel = ?";
@@ -88,7 +108,13 @@ public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById 
 		return al;
 	}
 	
-	
+	/**
+	 * 
+	 * @param RoomType è il tipo di stanza da aggiungere al prezziario, esempio Matrimoniale, Tripla
+	 * @param price è il prezzo associato al tipo di stanza, esempio 40, 60
+	 * @return {@code true} se l'aggiunta è effettuata con successo, altrimenti {@code false} 
+	 * @throws java.sql.SQLException
+	 */
 	public boolean addElementToPriceList(String RoomType, int price) {
 		String query = "insert into PriceList (Price, Type_Room, Hotel ) values ( ?, ?, ? )";
 		
@@ -110,6 +136,13 @@ public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById 
 		return true;
 	}
 	
+	/**
+	 * Si può modificare solo il prezzo, non il nome del tipo di stanza.
+	 * @param RoomType è il tipo di stanza da modificare, esempio Matrimoniale, Tripla
+	 * @param price è il nuovo prezzo da associare alla stanza, esempio 50, 70
+	 * @return {@code true} se la modifica è effettuata con successo, altrimenti {@code false} 
+	 * @throws java.sql.SQLException
+	 */
 	public boolean editPriceList(String RoomType, int price) {
 		String query = "update PriceList set Price = ? where Type_Room = ? and Hotel = ?";
 		
@@ -131,6 +164,12 @@ public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById 
 		
 	}
 	
+	/**
+	 * 
+	 * @param RoomType il tipo di stanza da eliminare
+	 * @return {@code true} se l'eliminazione è fatta con successo, altrimenti {@code false}
+	 * @throws java.sql.SQLException
+	 */
 	public boolean deleteElementToPriceList(String RoomType) {
 		boolean res = true;
 		String query = "delete from PriceList where Hotel = ? and Type_Room = ?";
@@ -152,6 +191,11 @@ public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById 
 		return res;
 	}
 	
+	/**
+	 * 
+	 * @return un array list di periodi stagionali dell'Hotel
+	 * @throws java.sql.SQLException
+	 */
 	public ArrayList<Season> getSeason(){ //PriceList = prezziario
 		ArrayList<Season> al = new ArrayList<Season>(); //al = array list
 		
@@ -182,7 +226,15 @@ public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById 
 	}
 	
 	
-	public boolean addEtoSeason(String season, String startDate, String endDate, int price) {
+	/**
+	 * Aggiunge un periodo stagionale al database
+	 * @param season può essere alta, media, bassa stagione
+	 * @param startDate data di inizio periodo stagionale
+	 * @param endDate data di fine periodo stagionale
+	 * @param incr incremento percentuale
+	 * @return
+	 */
+	public boolean addEtoSeason(String season, String startDate, String endDate, int incr) {
 		String HotelName = this.getHotelNameById(conn, id);
 		
 		try {
@@ -192,7 +244,7 @@ public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById 
 			ps.setString(1, season);
 			ps.setString(2, startDate);
 			ps.setString(3, endDate);
-			ps.setInt(4, price);
+			ps.setInt(4, incr);
 			ps.setString(5, HotelName);
 			ps.execute();
 			
@@ -205,6 +257,11 @@ public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById 
 		
 	}
 	
+	/**
+	 * Elimina un periodo stagionale dall'Hotel
+	 * @param etoSeason una stringa che contiene periodo di inizio e di fine del periodo stagionale, seperati dal carattere {@code '&'}
+	 * @return {@code true} se l'eliminazione è effettuata con successo, altrimenti {@code false}
+	 */
 	public boolean removeEtoSeason(String etoSeason) {
 		if (etoSeason == null) {
 			return false;
@@ -230,6 +287,16 @@ public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById 
 		return true;
 	}
 	
+	/**
+	 * Modifica un periodo stagionale. utilizza {@link hoppin.finance.FinanceQueryBuilder} per costruire la query SQL da effettuare.
+	 * @param etoSeason una stringa che contiene periodo di inizio e di fine del periodo stagionale, seperati dal carattere {@code '&'}
+	 * serve ad identificare la stagione da modificare
+	 * @param season nuovo tipo di stagione da modificare
+	 * @param startDate, nuova data di inizio periodo, può essere null in tal caso NON verrà modificata la data d'inizio
+	 * @param endDate nuova data di fine periodo, può essere null vedi sopra
+	 * @param incr nuovo incremento percentuale, può essere null vedi sopra
+	 * @return {@code true} se la modifica è effettuata con successo, altrimenti {@code false}
+	 */
 	public boolean editEtoSeason(String etoSeason, String season, String startDate, String endDate, int incr) {
 		
 		if ( etoSeason == null) {
@@ -239,8 +306,7 @@ public class MySQLFinance extends MySQLConnect implements MySQLgetHotelNameById 
 		try {
 			String HotelName = this.getHotelNameById(conn, id);
 			
-			FinanceQueryBuilder fqb = new FinanceQueryBuilder(etoSeason, season, startDate, endDate, incr, HotelName);
-			fqb.connection(conn);
+			FinanceQueryBuilder fqb = new FinanceQueryBuilder(etoSeason, season, startDate, endDate, incr, HotelName, conn);
 			
 			PreparedStatement ps = fqb.makeStatement();
 			

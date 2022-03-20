@@ -6,11 +6,26 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Properties;
 
+/**
+ * 
+ * Usa l'absolute path definito da {@code pathToConfig} cioè {@value pathToConfig} 
+ * per caricare i dati inseriti nel file di configurazione <code>config.properties</code>
+ * E' implementato come un Singleton per evitare la creazione di altre istanze superflue
+ * 
+ * @see {@link hoppin.sql.MySQLConnect}
+ * @see {@link hoppin.hotelinfo.HotelInfoManagement}
+ */
 
 public class PropertyFactory {
 	private static PropertyFactory id = null;
-	private static final String pathToConfig = "/home/kurush/prog/eclipse-workspace/hoppin/";
+	private static final String pathToConfig = "/opt/";
 	private HashMap<String, String> map = null;
+	
+	/**
+	 * Il costruttore usa un HashMap per associare ogni proprietà 
+	 * presente nel file di configurazione ad una stringa, in modo che sia facilmente
+	 * raggiungibile da qualunque classe nel programma.
+	 */
 	
 	public PropertyFactory() {
 		try (InputStream config = new FileInputStream(pathToConfig + "config.properties"); ){
@@ -52,6 +67,10 @@ public class PropertyFactory {
 		return id;
 	}
 	
+	/**
+	 * 
+	 * @return restituisce {@code HashMap<String, String>} contenente gli elementi del file di configurazione
+	 */
 	public HashMap<String, String> getPropertyMap() {
 		return map;
 	}

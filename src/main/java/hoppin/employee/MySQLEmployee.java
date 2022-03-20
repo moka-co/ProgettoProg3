@@ -8,6 +8,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * Effettua delle operazioni CRUD (Create, Read, Update, Delete) su database MYSQL
+ * legate al sottosistema Employee di hoppin.
+ * Si collega al database estendendo la superclasse {@link hoppin.util.sql.MySQLConnect}
+ *
+ */
 public class MySQLEmployee extends MySQLConnect {
 	int id = 0;
 	
@@ -15,10 +22,22 @@ public class MySQLEmployee extends MySQLConnect {
 		super();
 	}
 	
+	/**
+	 * 
+	 * @param i id dell'utente attualmente autenticato che richiama i metodi in {@link hoppin.employee.EmployeeManagement}
+	 */
 	public MySQLEmployee(int i) {
 		id=i;
 	}
 
+	/**
+	 * 
+	 * @param name dell'impiegato/a
+	 * @param email dell'impiegato/a
+	 * @param passw dell'impiegato/a
+	 * @return {@code true} se l'impiegato viene aggiunto, {@code false} se almeno una stringa di input è vuota o null, oppure se c'è un errore
+	 * @throws java.sql.SQLException
+	 */
 	public boolean addEmployee(String name, String email, String passw) {
 		
 		//Se l'input è null o vuoto, ritorna falso.
@@ -58,6 +77,12 @@ public class MySQLEmployee extends MySQLConnect {
 		}
 	}
 	
+	/**
+	 * 
+	 * @return {@code null} se non ci sono impiegati o c'è stato un errore, 
+	 * altrimenti restituisce un ArrayList di impiegati dell'Hotel in cui lavora il proprietario che richiama questo metodo
+	 * @throws java.sql.SQLException
+	 */
 	public ArrayList<Employee> getEmployeeList(){
 		
 		ArrayList<Employee> al = null;
@@ -87,12 +112,17 @@ public class MySQLEmployee extends MySQLConnect {
 	}
 	
 	
+	/**
+	 * 
+	 * @param ids una lista di interi cioè id di impiegati da eliminare
+	 * @return {@code true} se l'impiegato viene eliminato, {@code false} se c'è un errore o la lista è vuota
+	 * @throws java.sql.SQLException
+	 */
 	public boolean deleteEmployee(List<Integer> ids) {
 		
 		try {
 			int size = ids.size();
-			if ( size < 1 || ids == null) {
-				System.out.println("Lista vuota");
+			if ( size < 1 || ids == null) { //lista vuota
 				return false;
 			}
 			

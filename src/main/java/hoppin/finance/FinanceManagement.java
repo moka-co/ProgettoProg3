@@ -11,12 +11,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
+/**
+ * Interfaccia funzionale che implementa delle strategie usate nel metodo {@link hoppin.employe.EmployeeManagement#doPost}
+ */
 interface FinanceStrategy {
 	void run() throws ServletException, IOException;
 }
 
-
+/**
+ * 
+ * Gestisce le richeste HTTP GET e POST ed effettua delle operazioni legate
+ * al sottosistema Finance, in base al tipo di richiesta e ai suoi attributi
+ * Usa {@link hoppin.finance.MySQLFinance}, {@link hoppin.finance.FinanceFactory}, {@link hoppin.finance.FinanceCache} 
+ * e la Java Server Page <mono>FinanceManagement.jsp</mono>
+ * 
+ */
 public class FinanceManagement extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -24,6 +33,10 @@ public class FinanceManagement extends HttpServlet {
         super();
     }
 
+    /**
+     * Prende alcune informazioni dal database come il prezziario e la lista delle stagioni 
+     * e le inserisce come attributi della risposta HTTP 
+     */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		FinanceCache cache = FinanceCache.getInstance();
@@ -50,6 +63,13 @@ public class FinanceManagement extends HttpServlet {
 				
 	}
 
+	/**
+	 * @param request 
+	 * @param response
+	 * 
+	 * Riceve degli attributi da @param request e in base a questi
+	 * implementa in modo dinamico  {@link hoppin.finance.FinanceStrategy#run()} e lo esegue.
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		
@@ -59,11 +79,9 @@ public class FinanceManagement extends HttpServlet {
 		int id = factory.makeCookieGetter(request).getIdbyCookies();
 		MySQLFinance db = new MySQLFinance(id);
 		
-		//Strategy initialization
-		FinanceStrategy strategy = () -> {
-			return;
-		};
+		FinanceStrategy strategy = () -> { }; //Inizializzazione della funzione lambda strategy
 		
+		//lista di keywords valide che corrispondono ad un azione da effettuare:
 		List<String> words = Arrays.asList("AddRoomTypeId", "RemoveRoomTypeId", "NewPriceToIns", "ConfirmAddEtoPriceList",
 				"DeleteRoom", "ConfirmAddEtoSeason", "ConfirmEditEtoSeason", "EtoSeason", "DeleteEtoSeason" );
 		
@@ -75,6 +93,22 @@ public class FinanceManagement extends HttpServlet {
 		}
 		
         String param = request.getParameter(switched);
+        
+        /**
+         * Abbiamo due variabili: param e switched.
+         * switched è una delle keywords valide che sono passate in input, oppure è una stringa vuota.
+         * 
+         * switched viene utilizzato nel costrutto 
+         * @{code switch(switched){
+         * case "AddRoomTypeId" : { //... };
+         * }
+         *  // ...
+         * } 
+         * 
+         * param è il parametro della richiesta HTTP associato alla keyword passata.
+         * 
+         * 
+         */
 
         switch( switched ) {
 

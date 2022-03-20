@@ -6,24 +6,39 @@ import java.sql.SQLException;
 
 import hoppin.util.QueryBuilder;
 
+/**
+ * 
+ * Costruisce una stringa di id di impiegati da eliminare
+ * utilizzata dal metodo {@link hoppin.employee.MySQLEmployee#deleteEmployee(java.util.List)}
+ */
 public class FinanceQueryBuilder extends QueryBuilder {
 	
 	Connection conn;
-	String etoSeason;
-	String season;
-	String startDate;
-	String endDate;
+	String etoSeason; //Identificativo della tabella delle stagioni (alta, media, bassa stagione)
+	String season; //Stagione (alta, media, bassa)
+	String startDate; //nuova data di inizio periodo da inserire
+	String endDate; //nuova data di fine periodo da inserire
 	
 	String OLDstartDate;
 	String OLDendDate;
 	
 	String HotelName;
-	int incr;
+	int incr; //incremento percentuale
 	boolean prec = false;
 	
 	public void connection(Connection conn) { this.conn = conn; }
 	
-	public FinanceQueryBuilder(String etoSeason, String season, String startDate, String endDate, int incr, String HotelName) {
+	/**
+	 * 
+	 * @param etoSeason identificativo della tabella delle stagioni costituito da periodo_inizio + "\&" + periodo_fine"
+	 * @param season alta, media, bassa stagione
+	 * @param startDate nuova data di inizio periodo da inserire
+	 * @param endDate nuova data di fine periodo da inserire
+	 * @param incr incremento percentuale da inserire
+	 * @param HotelName nome dell'Hotel
+	 * @param conn connessione al database
+	 */
+	public FinanceQueryBuilder(String etoSeason, String season, String startDate, String endDate, int incr, String HotelName, Connection conn) {
 		super();
 		
 		this.HotelName = HotelName;
@@ -34,10 +49,17 @@ public class FinanceQueryBuilder extends QueryBuilder {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.incr = incr;
+		this.conn = conn;
 		
 		
 	}
-
+	
+	/**
+	 * Costruisce una query SQL usata per aggiornare la tabella Season
+	 * 
+	 * @return ritorna una stringa del tipo UPDATE SEASON SET nome_colonna = ? ... WHERE Hotel = ? ...
+	 * in base ai parametri che sono ricevuti alla costruzione della classe
+	 */
 	public String makeQuery() {
 		sb.append("UPDATE Season SET");
 		
@@ -75,6 +97,11 @@ public class FinanceQueryBuilder extends QueryBuilder {
 		return this.toString();
 	}
 	
+	/**
+	 * 
+	 * @return restituisce un istanza di PreparedStatement con la query e i dati inseriti, pronta per l'esecuzione.
+	 * @throws SQLException quando c'è un problema con la connessione al database
+	 */
 	public PreparedStatement makeStatement() throws SQLException {
 		if ( conn == null) {
 			return null;
