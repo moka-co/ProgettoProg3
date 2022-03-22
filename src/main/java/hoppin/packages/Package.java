@@ -1,5 +1,11 @@
 package hoppin.packages;
 
+/**
+ * Rappresenta un pacchetto di servizi aggiuntivi per un Hotel <br>
+ * Ha come attributi nome, descrizione, nome dell'Hotel e prezzo, 
+ * implementa i relativi metodi per manipolare e ottenere questi attributi.
+ *
+ */
 public class Package {
 
 	public String name;
@@ -7,6 +13,10 @@ public class Package {
 	public String Hotel;
 	public int price;
 	
+	/**
+	 * La differenza tra i due costruttori sta nei parametri, in questo non c'è Hotel in input
+	 * 
+	 */
 	public Package(String name, String description, int price) {
 		super();
 		this.name=name;

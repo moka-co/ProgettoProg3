@@ -23,9 +23,8 @@ interface EmployeeStrategy {
 
 /**
  * 
- * 
  * Gestisce le richeste HTTP GET e POST ed effettua delle operazioni legate
- * al sottosistema Employee, in base al tipo di richiesta e ai suoi attributi
+ * al sottosistema EmployeeManagement, in base al tipo di richiesta e ai suoi attributi
  * Usa {@link hoppin.employee.MySQLEmployee}, {@link hoppin.employee.EmployeeFactory}, {@link hoppin.employee.EmployeeCache} 
  * e la Java Server Page <mono>EmployeeManagement.jsp</mono>
  * 

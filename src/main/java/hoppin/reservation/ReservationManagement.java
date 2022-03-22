@@ -11,11 +11,21 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * Interfaccia funzionale che implementa delle strategie usate nel metodo {@link ReservationManagement#doPost}
+ */
 interface ReservationStrategy {
 	void run() throws ServletException, IOException;
 }
 
-
+/**
+ * 
+ * Gestisce le richeste HTTP GET e POST ed effettua delle operazioni legate
+ * al sottosistema ReservationManagement, in base al tipo di richiesta e ai suoi attributi
+ * Usa {@link MySQLReservation}, {@link ReservationFactory}, {@link ReservationCache} 
+ * e la Java Server Page <mono>PackagesManagement.jsp</mono>
+ * 
+ */
 public class ReservationManagement extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -40,16 +50,22 @@ public class ReservationManagement extends HttpServlet {
 		response.sendRedirect("/hoppin/ReservationManagement.jsp");
 	}
 
+	/**
+	 * 
+	 * Riceve degli attributi da @param request e in base a questi
+	 * implementa in modo dinamico  {@link EmployeeStrategy#run()} e lo esegue.
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		HttpSession session=request.getSession();
-		//MySQLReservation db = new MySQLReservation();
+
 		ReservationFactory factory = new ReservationFactory();
 		MySQLReservation db = (MySQLReservation) factory.makeDatabaseConnect(request);
 		ReservationCache cache = ReservationCache.getInstance();
 		
-		ReservationStrategy strategy = () -> { };
+		ReservationStrategy strategy = () -> { }; //Inizializzazione della funzione lambda strategy
 		
+		//lista di keywords valide che corrispondono ad un azione da effettuare:
 		List<String> words = Arrays.asList("AddValue", "ConfirmAddReservation", "DeleteReservation", "ConfirmEditReservation");
 		
 		String switched = "";
@@ -58,8 +74,15 @@ public class ReservationManagement extends HttpServlet {
 				switched = str;
 			}
 		}
+		
 		String param = request.getParameter(switched);
 		
+		 /**
+         * switched è una delle keywords valide che sono passate in input, oppure è una stringa vuota e 
+         * viene usata nel costrutto switch.
+         * param è il parametro della richiesta HTTP associato alla keyword passata.
+         * 
+         */
 		switch ( switched ) {
 		
 		case "AddValue" : {
@@ -83,6 +106,7 @@ public class ReservationManagement extends HttpServlet {
 					session.setAttribute("ResultAddEmployee","no");
 				}
 			};
+			
 			doGet(request,response);
 			break;
 		}
@@ -112,11 +136,12 @@ public class ReservationManagement extends HttpServlet {
 			doGet(request, response);
 			break;
 		}
-		}
 		
+		} //end switch
+ 		
 		strategy.run();
 		db.disconnect();
 		
-	}
+	} //end doPost
 
-}
+} 

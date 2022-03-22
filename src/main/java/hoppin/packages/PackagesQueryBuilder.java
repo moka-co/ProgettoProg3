@@ -6,12 +6,24 @@ import java.sql.SQLException;
 
 import hoppin.util.QueryBuilder;
 
+/**
+ * 
+ * Costruisce una query SQL utilizzata da {@link hoppin.packages.PackagesQueryBuilder}
+ *
+ */
 public class PackagesQueryBuilder extends QueryBuilder {
 	Connection conn;
 	String Hotel;
 	Package pack;
 	String oldPackName;
 
+	/**
+	 * 
+	 * @param Hotel nome dell'Hotel
+	 * @param pack pacchetto che contiene i parametri da mettere nella query sql
+	 * @param oldPackName nome del pacchetto da modificare, che può differire quello restituito da {@code pack.getName()}
+	 * @param connection connessione al database
+	 */
 	public PackagesQueryBuilder(String Hotel, Package pack, String oldPackName, Connection connection) {
 		super();
 		this.Hotel = Hotel;
@@ -20,6 +32,12 @@ public class PackagesQueryBuilder extends QueryBuilder {
 		this.oldPackName = oldPackName;
 	}
 	
+	/**
+	 * 
+	 * @return restituisce una stringa usata per la query sql
+	 * ad esempio, se pack.getDescription() è l'unico attributo non null, 
+	 * allora restituisce UPDATE Package SET description = ? WHERE Hotel = ? and name = ?;
+	 */
 	public String makeQuery() {
 		String name = pack.getName();
 		String description = pack.getDescription();
@@ -54,6 +72,13 @@ public class PackagesQueryBuilder extends QueryBuilder {
 		
 	}
 	
+	/**
+	 * Utilizza il metodo precedente {@link #makeQuery()}, lo imposta a un istanza di PreparedStatement e 
+	 * poi imposta i relativi parametri.
+	 * 
+	 * @return un istanza di PreparedStatement con una query pronta da eseguire
+	 * @throws SQLException
+	 */
 	public PreparedStatement makeStatement() throws SQLException {
 		String name = pack.getName();
 		String description = pack.getDescription();

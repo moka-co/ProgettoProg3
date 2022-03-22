@@ -5,7 +5,14 @@ import hoppin.util.factory.PropertyFactory;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 
-public class MySQLConnect { 
+/**
+ * 
+ * Effettua una connessione ad un database MYSQL utilizzando i dati presi da 
+ * {@link hoppin.util.factory.PropertyFactory}.
+ * 
+ *
+ */
+public abstract class MySQLConnect { 
 	protected int id = 0;
 	protected MysqlDataSource mysqlDS = null;
 	
@@ -14,6 +21,9 @@ public class MySQLConnect {
 	protected String user;
 	protected String dburl;
 
+	/**
+	 * Nel costruttore viene effettuata la connessione al database, impostando tutti i parametri necessari come user, passw e dburl
+	 */
 	public MySQLConnect(){
 		
 		try {
@@ -22,8 +32,7 @@ public class MySQLConnect {
 			passw = PropertyFactory.getInstance().getPropertyMap().get("password");
 			dburl = PropertyFactory.getInstance().getPropertyMap().get("url");
 	        
-	        //Connettiti al database
-			//conn = DriverManager.getConnection(this.dburl, this.user, this.passw); //Connettiti al database
+
 			mysqlDS = new MysqlDataSource();
 			mysqlDS.setURL(dburl);
 			mysqlDS.setUser(user);
@@ -35,8 +44,7 @@ public class MySQLConnect {
 		} catch (SQLException e) { //Errore se la connessione al database non avviene in modo corretto
 			System.out.println(e);
 			System.out.println("Error while connecting to the database");
-			
-		
+	
 		}
 	}
 	

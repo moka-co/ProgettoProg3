@@ -5,8 +5,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
+/**
+ * Estensione di {@link MySQLConnect} che implementa alcuni metodi per ottenere gli id degli utenti
+ *
+ */
 public class MySQLCookie extends MySQLConnect {
 	
+	/**
+	 * 
+	 * @param id dell'utente autenticato
+	 */
 	public MySQLCookie(int id) {
 		super();
 		this.id = id;
@@ -16,6 +24,11 @@ public class MySQLCookie extends MySQLConnect {
 		super();
 	}
 	
+	/**
+	 * 
+	 * @param email dell'utente
+	 * @return id dell'utente
+	 */
 	public int getId(String email) {
 		int i = 0;
 		
@@ -32,7 +45,11 @@ public class MySQLCookie extends MySQLConnect {
 		return i;
 	}
 	
-		
+	/**
+	 * 
+	 * @param i id dell'utente
+	 * @return nome completo dell'utente
+	 */
 	public  String getNamebyId(int i) {
 		String completeName = null;
 		try {
@@ -46,6 +63,7 @@ public class MySQLCookie extends MySQLConnect {
 		}catch (SQLException e) {
 			System.out.println(e);
 		}
+		
 		return completeName;
 	}
 

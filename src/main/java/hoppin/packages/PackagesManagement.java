@@ -11,10 +11,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Interfaccia funzionale che implementa delle strategie usate nel metodo {@link hoppin.employe.PackagesManagement#doPost}
+ */
 interface PackagesStrategy {
 	void run()  throws ServletException, IOException;
 }
 
+/**
+ * 
+ * Gestisce le richeste HTTP GET e POST ed effettua delle operazioni legate
+ * al sottosistema PackagesManagement, in base al tipo di richiesta e ai suoi attributi
+ * Usa {@link MySQLPackages}, {@link PackagesFactory}, {@link PackagesCache} 
+ * e la Java Server Page <mono>PackagesManagement.jsp</mono>
+ * 
+ */
 public class PackagesManagement extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -22,21 +33,22 @@ public class PackagesManagement extends HttpServlet {
         super();
     }
 
+    /**
+     * Imposta la lista di pacchetti di un Hotel
+     */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		PackagesCache cache = PackagesCache.getInstance();
-		cache.setSelectedPackage("");
+		PackagesCache.getInstance().setSelectedPackage(""); //imposta pacchetto selezionato a null
+		//Serve sopratutto in caso un utente seleziona un pacchetto, poi ricarica la pagina e clicca su elimina pacchetto
 		
-		//MySQLPackages db = new MySQLPackages();
 		PackagesFactory factory = new PackagesFactory();
-		int i=factory.makeCookieGetter(request).getIdbyCookies();
 		MySQLPackages db = (MySQLPackages) factory.makeDatabaseConnect(request);
 	
 		HttpSession session = request.getSession();
 		
-		ArrayList<Package> PackageList = db.GetPackageList(i);
+		ArrayList<Package> packageList = db.getPackageList();
 		
-		session.setAttribute("PackageList", PackageList);
+		session.setAttribute("PackageList", packageList);
 		
 		db.disconnect();
 		
@@ -44,6 +56,13 @@ public class PackagesManagement extends HttpServlet {
 		
 	}
 
+	/**
+	 * @param request 
+	 * @param response
+	 * 
+	 * Riceve degli attributi da @param request e in base a questi
+	 * implementa in modo dinamico  {@link hoppin.employee.EmployeeStrategy#run()} e lo esegue.
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		PackagesCache cache = PackagesCache.getInstance();
@@ -51,9 +70,9 @@ public class PackagesManagement extends HttpServlet {
 		
 		MySQLPackages db = (MySQLPackages) factory.makeDatabaseConnect(request);
 		
-		//int id=factory.makeCookieGetter(request).getIdbyCookies();
-		PackagesStrategy strategy = () -> { };
+		PackagesStrategy strategy = () -> { }; //Inizializzazione della funzione lambda strategy
 		
+		//lista di keywords valide che corrispondono ad un azione da effettuare:
 		List<String> words = Arrays.asList("ConfirmAddPackage", "SetValue", "DeletePackage", "ConfirmEditPackage");
 		
 		String switched = "";
@@ -64,6 +83,13 @@ public class PackagesManagement extends HttpServlet {
 		}
 		
 		String param = request.getParameter(switched);
+		
+		 /**
+       	  * switched è una delle keywords valide che sono passate in input, oppure è una stringa vuota e 
+          * viene usata nel costrutto switch.
+          * param è il parametro della richiesta HTTP associato alla keyword passata.
+          * 
+          */
 		
 		switch (switched) {
 		
@@ -77,6 +103,7 @@ public class PackagesManagement extends HttpServlet {
 				db.addPackage(Npack, DPack, PPack);
 				
 			};
+			
 			response.sendRedirect("/hoppin/PackagesManagement");
 			break;
 		}

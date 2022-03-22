@@ -6,20 +6,33 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import hoppin.util.sql.*;
 
+/**
+ * 
+ * Effettua operazioni CRUD relative al sottosistema PackagesManagement su database MySQL
+ * Si collega al database estendendo la superclasse {@link hoppin.util.sql.MySQLConnect}
+ * 
+ */
 public class MySQLPackages extends MySQLConnect implements MySQLgetHotelNameById{
 
+	/**
+	 * 
+	 * @param i id dell'utente autenticato.
+	 */
 	public MySQLPackages(int i) {
 		super();
 		id = i;
 	}
 
-
-
-	public ArrayList<Package> GetPackageList(int i){
+	/**
+	 * 
+	 * @return un arraylist di pacchetti per l'Hotel dell'utente che ha fatto la richiesta
+	 * @see hoppin.packages.Package
+	 */
+	public ArrayList<Package> getPackageList(){
 		ArrayList<Package> PackageList = null;
 		try {
 			
-			String Hname = this.getHotelNameById(conn, i);
+			String Hname = this.getHotelNameById(conn, id);
 			PreparedStatement psi = conn.prepareStatement("select * from Package where Hotel = ? ");
 			psi.setString(1, Hname);
 			ResultSet rs = psi.executeQuery();
@@ -36,14 +49,20 @@ public class MySQLPackages extends MySQLConnect implements MySQLgetHotelNameById
 
 
 
-	public void addPackage(String NPack,String DPack,int PPack) {
+	/**
+	 * Aggiunge un pacchetto alla lista
+	 * @param name nome del pacchetto
+	 * @param des descrizione del pacchetto
+	 * @param price prezzo del pacchetto
+	 */
+	public void addPackage(String name,String des,int price) {
 		try {
 			
 			String Hname = this.getHotelNameById(conn, id);
 			PreparedStatement psi =conn.prepareStatement("insert into Package (name, price, description, hotel) values (? ,? ,? ,?) ");
-			psi.setString(1, NPack);
-			psi.setInt(2, PPack);
-			psi.setString(3, DPack);
+			psi.setString(1, name);
+			psi.setInt(2, price);
+			psi.setString(3, des);
 			psi.setString(4, Hname);
 			
 			psi.execute();
@@ -53,18 +72,27 @@ public class MySQLPackages extends MySQLConnect implements MySQLgetHotelNameById
 		}		
 	}
 	
-	public void deletePackage(String pckg) {
+	/**
+	 * Elimina un pacchetto
+	 * @param name nome del pacchetto
+	 */
+	public void deletePackage(String name) {
 		String Hname = this.getHotelNameById(conn, id);
 		try {
 			PreparedStatement ps = conn.prepareStatement("delete from Package where Hotel = ? and name = ? ");
 			ps.setString(1, Hname);
-			ps.setString(2, pckg);
+			ps.setString(2, name);
 			ps.execute();
 		} catch (SQLException e) {
 			System.out.println(e);
 		}
 	}
 	
+	/**
+	 * Modifica un pacchetto già esistente nel database
+	 * @param pac istanza Package con contiene i nuovi valori da inserire al posto di quelli presenti nel pacchetto
+	 * @param pacName nome del pacchetto da modificare, che può essere diverso da quello contenuto in pac
+	 */
 	public void editPackage(Package pac, String pacName) {
 		
 		if ( pac == null) {
@@ -72,74 +100,10 @@ public class MySQLPackages extends MySQLConnect implements MySQLgetHotelNameById
 		}
 		
 		String Hotel = this.getHotelNameById(conn, id);
-		/*
-		 * 
-		String name = pac.getName();
-		String description = pac.getDescription();
-		int price = pac.getPrice();
-	
-		
-		String query = "";
-		StringBuilder sb = new StringBuilder();
-		int pnt = 1;
-		sb.append("UPDATE Package SET ");
-
-		if ( ! name.equals("") ) {
-			if (pnt != 1)
-				sb.append(", ");
-			sb.append("name = ? ");
-			pnt++;
-		}
-		
-		if ( ! description.equals("") ) {
-			if (pnt != 1)
-				sb.append(", ");
-			sb.append("description = ? ");
-			pnt++;
-		}
-		
-		if ( price != 0) {
-			if (pnt != 1)
-				sb.append(", ");
-			sb.append("price = ?" );
-			pnt++;
-		}
-		
-		sb.append("WHERE Hotel = ? and name = ?;");
-		query = sb.toString();
-		
-		*/ 
 		
 		PackagesQueryBuilder pqb = new PackagesQueryBuilder(Hotel, pac, pacName, conn);
 		
 		try {
-			//PreparedStatement ps = conn.prepareStatement(query);
-			/*
-			pnt = 1;
-			if ( ! name.equals("") ) {
-				ps.setString(pnt, name);
-				pnt++;
-			}
-			
-			if ( ! description.equals("") ) {
-				ps.setString(pnt, description);
-				pnt++;
-			}
-			
-			if ( price != 0) {
-				ps.setInt(pnt, price);
-				pnt++;
-			}
-			
-			if ( pnt != 1) {
-				ps.setString(pnt, Hotel);
-				pnt++;
-				ps.setString(pnt, pacName);
-				ps.execute();
-			}
-			
-			*/
-			
 			PreparedStatement ps = pqb.makeStatement();
 			if ( ps != null) {
 				ps.execute();

@@ -7,14 +7,29 @@ import java.util.ArrayList;
 
 import hoppin.util.sql.*;
 
+/**
+ * 
+ * Effettua operazioni CRUD relative al sottosistema ReservationManagement su database MySQL
+ * Si collega al database estendendo la superclasse {@link hoppin.util.sql.MySQLConnect}
+ * 
+ */
 public class MySQLReservation extends MySQLConnect implements MySQLgetHotelNameById {
+	
+	/**
+	 * 
+	 * @param i è l'id dell'utente autenticato.
+	 */
 	public MySQLReservation(int i) {
 		super();
 		id = i;
 	}
 	
-	public ArrayList<Reservation> getReservationList(){
-		
+	/**
+	 * 
+	 * @return restituisce un ArrayList di {@code Reservation} per l'Hotel dell'utente autenticato
+	 * @see hoppin.reservation.Reservation
+	 */
+	public ArrayList<Reservation> getReservationList(){	
 		
 		try {			
 			String HotelName = this.getHotelNameById(conn, id);
@@ -38,14 +53,20 @@ public class MySQLReservation extends MySQLConnect implements MySQLgetHotelNameB
 
 	}
 	
+	/**
+	 * Aggiunge una nuova prenotazione al database con i parametri presenti nella prenotazione passa in input
+	 * @param res istanza di Reservation con tutti i dati della prenotazione da inserire nel database
+	 * @return {@code true} se la prenotazione è inserita con successo, altrimenti {@code false}
+	 */
 	public boolean addReservation(Reservation res) {
 		try {
 			PreparedStatement ps = conn.prepareStatement("select max(id) as id from Reservation");
 			ResultSet rs = ps.executeQuery();
 			int ReservationId = -1;
-			if ( rs != null) {
-				rs.next();
+			if ( rs.next() ) {
 				ReservationId = rs.getInt("id") + 1;
+			}else {
+				return false;
 			}
 			rs.close();
 			ps.close();
@@ -80,7 +101,11 @@ public class MySQLReservation extends MySQLConnect implements MySQLgetHotelNameB
 		}
 	}
 	
-	
+	/**
+	 * Modifica una prenotazione già esistente con i parametri presenti nella prenotazione passata in input
+	 * @param res istanza di Reservation con i dati da inserire al posto di quelli già presenti
+	 * @return {@code true} se la prenotazione è modificata con successo, altrimenti {@code false}
+	 */
 	public boolean editReservation(Reservation res) {
 		
 		ReservationQueryBuilder rqb = new ReservationQueryBuilder(res, conn);
@@ -101,6 +126,11 @@ public class MySQLReservation extends MySQLConnect implements MySQLgetHotelNameB
 		return true;
 	}
 	
+	/**
+	 * Elimina una prenotazione a partire dall'id
+	 * @param resId reservationId, id della prenotazione
+	 * @return {@code true} se viene eliminato con successo, altrimenti {@code false}
+	 */
 	public boolean deleteReservation(int resId) {
 		try {
 			

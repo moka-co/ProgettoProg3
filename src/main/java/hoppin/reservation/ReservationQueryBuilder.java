@@ -6,16 +6,35 @@ import java.sql.SQLException;
 
 import hoppin.util.QueryBuilder;
 
+/**
+ * 
+ * Costruisce la query e lo statement pronto da eseguire 
+ * per il metodo {@link hoppin.reservation.MySQLReservation#editReservation(Reservation)}
+ *
+ */
 public class ReservationQueryBuilder extends QueryBuilder {
 	Connection conn;
 	Reservation res;
 
+	/**
+	 * 
+	 * @param res istanza di Reservation con i dati da modificare della prenotazione
+	 * @param connection to database
+	 */
 	public ReservationQueryBuilder(Reservation res, Connection connection) {
 		super();
 		this.res = res;
 		this.conn = connection;
 	}
 	
+	/**
+	 * 
+	 * @return restituisce una query sql con i parametri da inserire
+	 * Ad esempio se solo res.getCheckIn() è diverso dalla stringa vuota, quindi significa che si vuole
+	 * modificare la data di check-in, verrà restituita la stringa: <br>
+	 * "UPDATE Reservation SET Check_in = STR_TO_DATE(?, '%d-%m-%Y') WHERE id = ?"
+	 * @see java.sql.PreparedStatement
+	 */
 	public String makeQuery() {
 		
 		sb.append("UPDATE Reservation SET ");
@@ -51,6 +70,11 @@ public class ReservationQueryBuilder extends QueryBuilder {
 		return query;
 	}
 	
+	/**
+	 * Utilizza {@link #makeQuery()}
+	 * @return un PreparedStatement con i parametri inseriti nella query pronto da essere eseguito
+	 * @throws SQLException
+	 */
 	public PreparedStatement makeStatement() throws SQLException {
 		if (conn == null) {
 			return null;

@@ -9,6 +9,11 @@ import java.net.CookieManager;
 
 import hoppin.util.sql.MySQLCookie;
 
+/**
+ * Imposta l'id di un utente come valore di un cookie chiamato "id"
+ * @see CookieGetter
+ *
+ */
 public class CookieSetter {
 	public static CookieManager cookieManager = null;
 	

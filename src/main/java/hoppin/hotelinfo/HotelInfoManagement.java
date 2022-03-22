@@ -23,43 +23,70 @@ interface HIStrategy {
 	void run() throws IOException, ServletException;
 }
 
-
-@MultipartConfig
+/**
+ * 
+ * Gestisce le richeiste HTTP, GET e POST, leggendo o impostando i parametri HTTP di conseguenza,
+ * implementando le funzionalità del sottosistema HotelInfoManagement 
+ *
+ * Per l'annotazione {@link jakarta.servlet.annotation.MultipartConfig} 
+ * vedi <a>https://github.com/jakartaee/servlet/blob/master/api/src/main/java/jakarta/servlet/annotation/MultipartConfig.java</a>
+ * E' necessaria per far capire al servlet che si può aspettare richieste HTTP con parametri di tipo multipart/form-data, come avviene 
+ * in {@link #doPost(HttpServletRequest, HttpServletResponse)} nel costrutto switch, nel caso "AddImage".
+ * 
+ *
+ */
+@MultipartConfig 
 public class HotelInfoManagement extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	//private static String pathToConfig = "/home/kurush/prog/eclipse-workspace/hoppin/";
-	private String path = "";
+	private String path = ""; 
 
     public HotelInfoManagement() {
         super();
-        path = PropertyFactory.getInstance().getPropertyMap().get("path");
+        path = PropertyFactory.getInstance().getPropertyMap().get("path"); //Percorso dove caricare le immagini
     }
 
+    /**
+     * Prende alcune informazioni dal database come il nome dell'utente selezionato e le informazioni dell'Hotel,
+     * li inserisce come attributi della risposta HTTP e infine rimanda a <mono>HomePage.jsp</mono>
+     */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		MySQLHotelInfo db = new MySQLHotelInfo();
 		HotelInfoFactory factory = new HotelInfoFactory();
+		
 		int id = factory.makeCookieGetter(request).getIdbyCookies();
+		
 		String username = db.getNamebyId(id);
 		HotelInfo hotel = db.getHotelInfo(id);
-		ArrayList<String> fns = db.getHotelImagesId(id);
+		
+		//Gli id delle immagini sono utilizzati per costruire il nome completo delle immagini
+		ArrayList<String> idImmagini = db.getHotelImagesId(id);
+		
 		db.disconnect();
+		
 		
 		HttpSession session=request.getSession();
 		
-		
-		
 		session.setAttribute("username", username);
 		session.setAttribute("hotelInfo", hotel);
-		session.setAttribute("fns", fns);
+		session.setAttribute("fns", idImmagini);
 		
 		response.sendRedirect("/hoppin/HomePage.jsp");
 	}
 
+	/**
+	 * @param request 
+	 * @param response
+	 * 
+	 * Riceve degli attributi da @param request e in base a questi
+	 * implementa in modo dinamico  {@link hoppin.hotelinfo.HIStrategy#run()} e lo esegue.
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		MySQLHotelInfo db = new MySQLHotelInfo();
 		HotelInfoFactory factory = new HotelInfoFactory();
+		HIStrategy strategy = () -> { }; //Inizializzazione della funzione lambda strategy
 		
+		//lista di keywords valide che corrispondono ad un azione da effettuare:
 		List<String> words = Arrays.asList("ConfirmEditInfo", "DeletePhoto", "AddImage" );
 		
 		String switched = "";
@@ -69,7 +96,21 @@ public class HotelInfoManagement extends HttpServlet {
 			}
 		}
 		
-		HIStrategy strategy = () -> { };
+		 /**
+         * Abbiamo due variabili: param e switched.
+         * switched è una delle keywords valide che sono passate in input, oppure è una stringa vuota.
+         * 
+         * switched viene utilizzato nel costrutto 
+         * @{code switch(switched){
+         * case "ConfirmEditInfo" : { //... };
+         * }
+         *  // ...
+         * } 
+         * 
+         * param è il parametro della richiesta HTTP associato alla keyword passata.
+         * 
+         * 
+         */
         
         switch ( switched ) {
         case "ConfirmEditInfo" : {
@@ -97,15 +138,14 @@ public class HotelInfoManagement extends HttpServlet {
 				String ext = "";
 				int id = factory.makeCookieGetter(request).getIdbyCookies();
 				
-				Part image = request.getPart("image");
+				Part image = request.getPart("image"); //Prendi l'immagine inviata
 				String submittedFileName = image.getSubmittedFileName().toString();
 				
 				try {
-					String [] splitd = submittedFileName.split("\\.");
-					ext = splitd[1];
-				} catch (Exception e) {
+					String [] splitd = submittedFileName.split("\\."); //Toglie l'estensione dell'immagine dal nome, esempio se "foto1.jpg", restituisce "foto1" e "jpg"
+					ext = splitd[1]; //Se la foto si chiamava "foto1.jpg" , in ext viene salvato "jpg"
+				} catch (Exception e) { //nome del file non corretto
 					System.out.println(e);
-					System.out.println("Bad file");
 					return;
 				}
 				
@@ -115,16 +155,16 @@ public class HotelInfoManagement extends HttpServlet {
 				}
 				
 				
-				int imageId = db.getMaxAndCountImageId(id)[0];
+				int imageId = db.getMaxAndCountImageId(id)[0]; //prendi l'id da assegnare all'immagine
 				if ( imageId != 0 ) {
 					String fileName = db.getHotelNameById(id) + Integer.toString(imageId) + "." + ext  ;
 				
 				
 					try (InputStream input = image.getInputStream()) {
-						Files.copy(input, Paths.get(path, fileName));
+						Files.copy(input, Paths.get(path, fileName)); //Carica l'immagine su file system
 					}
 				
-					db.uploadFileName(id, fileName);
+					db.uploadFileName(id, fileName); //Carica il riferimento all'immagine nel database
 				}
         	
         };

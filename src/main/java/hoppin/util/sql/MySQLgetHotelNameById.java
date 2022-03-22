@@ -7,6 +7,13 @@ import java.sql.SQLException;
 
 import hoppin.util.sql.MySQLgetHotelNameById;
 
+/**
+ * 
+ * Interfaccia che estende {@link MySQLgetAccTypeById} e la usa per ottenere il nome dell'Hotel dall'id.
+ * Se l'utente è di tipo Owner, allora basta fare una query banale per ottenere il nome dell'Hotel a partire dall'Id.
+ * Se l'utente è di tipo Employee, allora si fa una query innestata per ottenere l'id del proprietario e poi si effettua la query di sopra.
+ *
+ */
 public interface MySQLgetHotelNameById extends MySQLgetAccTypeById {
 	public default String getHotelNameById(Connection conn, int id) { //Questo metodo e' richiamato da piu' metodi di questa classe
 		

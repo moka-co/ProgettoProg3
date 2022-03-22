@@ -13,6 +13,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 
+/**
+ * 
+ * Filtro Servlet che rimanda a <mono>index.jsp</mono> se non c'è alcun cookie con un id valido
+ *
+ */
 public class AuthFilter extends HttpFilter {
 	private static final long serialVersionUID = 1L;
 	 
@@ -21,20 +26,15 @@ public class AuthFilter extends HttpFilter {
         super();
     }
 
-	public void destroy() {
-	}
-
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		HttpServletRequest req = (HttpServletRequest) request;
-
-		// pass the request along the filter chain
+		HttpServletRequest req = (HttpServletRequest) request; //cast di ServletRequest a HttpServletRequest
 
 		AuthFactory factory = new AuthFactory();
 		int id = factory.makeCookieGetter(req).getIdbyCookies();
-		if ( id == -1) { //Cookie non presente o scaduto, rimanda a Index.html
+		if ( id == -1) { //Cookie non presente o scaduto, rimanda a index.html
 			RequestDispatcher rd = request.getRequestDispatcher("/");
 			rd.forward(request, response);
-			// https://stackoverflow.com/questions/18211497/servlet-cannot-forward-after-response-has-been-committed
+			// vedi https://stackoverflow.com/questions/18211497/servlet-cannot-forward-after-response-has-been-committed
 		}else {
 			chain.doFilter(request, response);
 		}

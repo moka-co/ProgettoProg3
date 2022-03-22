@@ -6,18 +6,33 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import hoppin.util.sql.*;
 
-
+/**
+ * 
+ * Effettua operazioni CRUD relative al sottosistema HotelInfoManagement su database MySQL
+ * Si collega al database estendendo la superclasse {@link hoppin.util.sql.MySQLConnect}
+ * 
+ */
 public class MySQLHotelInfo extends MySQLCookie implements MySQLgetHotelNameById {
 	
 	public MySQLHotelInfo() {
 		super();
 	}
 	
+	/**
+	 * 
+	 * @param i id dell'utente autenticato.
+	 */
 	public MySQLHotelInfo(int i) {
 		super();
 		id = i;
 	}
 
+	/**
+	 * 
+	 * @param id
+	 * @return un istanza di HotelInfo contenente le informazioni dell'Hotel
+	 * @see hoppin.hotelinfo.HotelInfo
+	 */
 	public HotelInfo getHotelInfo(int id) {
 		HotelInfo hotel = null;
 		
@@ -28,10 +43,12 @@ public class MySQLHotelInfo extends MySQLCookie implements MySQLgetHotelNameById
 		try {
 			PreparedStatement ps = conn.prepareStatement(query);
 			ps.setString(1, hotelName);
+			
 			ResultSet rs = ps.executeQuery();
-			rs.next();
-			HotelInfoBuilder hib = new HotelInfoBuilder(rs);
-			hotel = hib.toHotelInfo();
+			if ( rs.next() ) {
+				HotelInfoBuilder hib = new HotelInfoBuilder(rs);
+				hotel = hib.toHotelInfo();
+			}
 			
 			
 		} catch (SQLException e) {
@@ -41,9 +58,13 @@ public class MySQLHotelInfo extends MySQLCookie implements MySQLgetHotelNameById
 		return hotel;
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @return un array di due elemento, il primo è l'id più grande delle immagini salvate,
+	 *  il secondo è il numero di immagini salvate, per un determinato Hotel.
+	 */
 	public Integer [] getMaxAndCountImageId(int id) {
-		
-		//return a Integer array of two elements, first is max and second is count
 		
 		Integer [] res = new Integer[2];
 		res[0] = 1;
@@ -69,7 +90,14 @@ public class MySQLHotelInfo extends MySQLCookie implements MySQLgetHotelNameById
 		return res;
 	}
 	
+	/**
+	 * 
+	 * @param id id dell'utente autenticato
+	 * @param fn filename, nome del file
+	 */
 	public void uploadFileName(int id, String fn) {
+		final int MaxNumImages = 6; //Numero massimo di immagini caricabili
+		
 		Integer[] res = this.getMaxAndCountImageId(id);
 		int max = res[0];
 		int count = res[1];
@@ -78,7 +106,7 @@ public class MySQLHotelInfo extends MySQLCookie implements MySQLgetHotelNameById
 		String query = "insert into HotelImages (Hotel, imageId, filename) VALUES ( ?, ?, ?); ";
 		
 		try {
-			if ( count < 6) {
+			if ( count < MaxNumImages) { 
 				PreparedStatement ps = conn.prepareStatement(query);
 				ps.setString(1, Hname);
 				ps.setInt(2, max);
@@ -95,7 +123,12 @@ public class MySQLHotelInfo extends MySQLCookie implements MySQLgetHotelNameById
 	}
 	
 
-	public  String getHotelNameById(int id) {
+	/**
+	 * 
+	 * @param id id dell'utente autenticato.
+	 * @return una stringa che co0ntiene il nome dell'Hotel
+	 */
+	public String getHotelNameById(int id) {
 		
 		String HotelName = "";
 		try {
@@ -122,6 +155,11 @@ public class MySQLHotelInfo extends MySQLCookie implements MySQLgetHotelNameById
 		return HotelName;
 	}
 	
+	/**
+	 * 
+	 * @param id dell'utente autenticato
+	 * @return un ArrayList di stringhe contenenti gli id delle immagini 
+	 */
 	public ArrayList<String> getHotelImagesId(int id){
 		ArrayList<String> ids = new ArrayList<String>();
 		String HotelName = this.getHotelNameById(id);
@@ -144,56 +182,11 @@ public class MySQLHotelInfo extends MySQLCookie implements MySQLgetHotelNameById
 		return ids;
 	}
 	
+	/**
+	 * Modifica le informazioni dell'Hotel
+	 * @param info istanza HotelInfo contenente i parametri da modificare
+	 */
 	public void editHotelInfo(HotelInfo info) {
-		
-		/* Da togliere dopo i test
-		StringBuilder sb = new StringBuilder();
-		sb.append("Update Hotel SET ");
-		String query; 
-		
-		String Hname = info.getName();
-		
-		int p = 1;
-		if ( info.getVia() != null) {
-			sb.append("Via = " +  '"' + info.getVia() + '"' );
-			p++;
-		}
-		
-		if ( info.getCity() != null ) {
-			if ( p > 1) {
-				sb.append(", ");
-			}
-			sb.append("City = " + '"' +  info.getCity() + '"' );
-			p++;
-		}
-		
-		if ( info.getPostcode() != null ) {
-			if ( p > 1) {
-				sb.append(", ");
-			}
-			sb.append("Postcode = " + '"' + info.getPostcode() + '"' );
-			p++;
-		}
-		
-		if ( info.getStars() != 0 ) {
-			if ( p > 1) {
-				sb.append(", ");
-			}
-			sb.append("Stars = " + '"' + info.getStars() + '"'  );
-			p++;
-		}
-		
-		if ( info.getDescription() != null) {
-			if ( p > 1) {
-				sb.append(", ");
-			}
-			sb.append("Description = " + '"' + info.getDescription() + '"' ) ;
-			p++;
-		}
-		
-		sb.append(" WHERE Name = " + '"' + Hname + '"' );
-		query = sb.toString();
-		*/
 		
 		HotelInfoQueryBuilder hiqb = new HotelInfoQueryBuilder(info, conn);
 
@@ -205,6 +198,16 @@ public class MySQLHotelInfo extends MySQLCookie implements MySQLgetHotelNameById
 		}
 	}
 
+	/**
+	 * Elimina il riferimento all'immagine dal database
+	 * @param id dell'utente autenticato
+	 * @param imgId id dell'immagine 
+	 * 
+	 * @see #getHotelImagesId(int)
+	 * @see hoppin.hotelinfo.HotelInfoManagement
+	 * 
+	 * 
+	 */
 	public void deleteImg(int id, String imgId) {
 		
 		if ( imgId.equals("") || imgId == null) {

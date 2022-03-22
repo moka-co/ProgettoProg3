@@ -5,65 +5,102 @@ import java.sql.SQLException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * 
+ * Costruisce la classe {@link hoppin.hotelinfo.HotelInfo}
+ *
+ *	@see {@link hoppin.hotelinfo.HotelInfo} 
+ * 	@see {@link hoppin.hotelinfo.HotelInfoFactory}
+ */
 public class HotelInfoBuilder {
 	HotelInfo hotel = new HotelInfo();
 	
+	/**
+	 * Imposta dei parametri di HotelInfo
+	 * @param rs Il risultato di una query SQL
+	 * @throws SQLException
+	 */
 	public HotelInfoBuilder(ResultSet rs) throws SQLException {
-		this.name(rs.getString("Name"))
-			.via(rs.getString("Via"))
-			.city(rs.getString("City"))
-			.postcode(rs.getString("Postcode"))
-			.stars(rs.getInt("Stars"))
-			.description(rs.getString("description"));
+		this.name(rs.getString("Name"));
+		this.via(rs.getString("Via"));
+		this.city(rs.getString("City"));
+		this.postcode(rs.getString("Postcode"));
+		this.stars(rs.getInt("Stars"));
+		this.description(rs.getString("description"));
 	}
 	
+	/**
+	 * Imposta dei parametri di HotelInfo
+	 * @param request una richiesta HTTP che contiene parametri i cui valori servono per costruire la classe HotelInfo
+	 */
 	public HotelInfoBuilder(HttpServletRequest request) {
-		this.via(request.getParameter("via"))
-			.city(request.getParameter("city"))
-			.postcode(request.getParameter("postcode"))
-			.description(request.getParameter("description"));
+		this.via(request.getParameter("via"));
+		this.city(request.getParameter("city"));
+		this.postcode(request.getParameter("postcode"));
+		this.description(request.getParameter("description"));
 		
 		
 		if ( request.getParameter("stars") != null) {
-			stars( Integer.valueOf(request.getParameter("stars")) );
+			this.stars( Integer.valueOf(request.getParameter("stars")) );
 		}else {
-			stars(0);
+			this.stars(0);
 		}
 	}
 	
+	/**
+	 * 
+	 * @return un istanza della classe HotelInfo con i parametri impostati dal costruttore
+	 */
 	public HotelInfo toHotelInfo() {
 		return hotel;
 	}
 	
-	public HotelInfoBuilder name(String name) {
+	/**
+	 * Imposta il nome dell'Hotel
+	 * @param name
+	 */
+	public void name(String name) {
 		hotel.setName(name);
-		return this;
 		
 	}
-	
-	public HotelInfoBuilder via(String via) {
+	/**
+	 * Imposta la via dell'Hotel
+	 * @param via
+	 */
+	public void via(String via) {
 		hotel.setVia(via);
-		return this;
 	}
 	
-	public HotelInfoBuilder city(String city) {
+	/**
+	 * Imposta la città dell'Hotel
+	 * @param city
+	 */
+	public void city(String city) {
 		hotel.setCity(city);
-		return this;
 	}
 	
-	public HotelInfoBuilder postcode(String postcode) {
+	/**
+	 * Imposta il codice postale dell'Hotel
+	 * @param postcode
+	 */
+	public void postcode(String postcode) {
 		hotel.setPostcode(postcode);
-		return this;
 	}
 	
-	public HotelInfoBuilder stars(int stars) {
+	/**
+	 * Imposta le stelle dell'Hotel
+	 * @param stars
+	 */
+	public void stars(int stars) {
 		hotel.setStars(stars);
-		return this;
 	}
 	
-	public HotelInfoBuilder description(String des) {
+	/**
+	 * Imposta la descrizione dell'Hotel
+	 * @param des
+	 */
+	public void description(String des) {
 		hotel.setDescription(des);
-		return this;
 	}
 	
 }

@@ -9,6 +9,10 @@ import jakarta.servlet.http.Cookie;
 import java.io.IOException;
 
 
+/**
+ * Mostra tutti i cookie salvati dal browser il sito dell'applicazione e nella sessione corrente.
+ *
+ */
 
 public class DebugCookies extends HttpServlet {
 	private static final long serialVersionUID = 1L;
