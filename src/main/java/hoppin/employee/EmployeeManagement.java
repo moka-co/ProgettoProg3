@@ -52,7 +52,7 @@ public class EmployeeManagement extends HttpServlet {
 
 		EmployeeFactory factory = new EmployeeFactory();
 		
-		MySQLEmployee db = (MySQLEmployee) factory.makeDatabaseConnect(request);
+		MySQLEmployee db = factory.makeDatabaseConnect(request);
 		ArrayList<Employee> elist = db.getEmployeeList();
 		db.disconnect();
 		
@@ -69,48 +69,23 @@ public class EmployeeManagement extends HttpServlet {
 	 * Riceve degli attributi da @param request e in base a questi
 	 * implementa in modo dinamico  {@link hoppin.employee.EmployeeStrategy#run()} e lo esegue.
 	 */
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         
         EmployeeFactory factory = new EmployeeFactory();
 		
-		MySQLEmployee db = (MySQLEmployee) factory.makeDatabaseConnect(request);
+		MySQLEmployee db = factory.makeDatabaseConnect(request);
 		
 		EmployeeCache cache = EmployeeCache.getInstance();
 		
 		EmployeeStrategy strategy = () -> { }; //Inizializzazione della funzione lambda strategy
 		
 		//lista di keywords valide che corrispondono ad un azione da effettuare
-		List<String> words = Arrays.asList("DeleteEmployee", "RemoveAccId", "AddAccId", "ConfirmAddEmployee" );
+		List<String> keywords = Arrays.asList("DeleteEmployee", "RemoveAccId", "AddAccId", "ConfirmAddEmployee" );
 		
-		String switched = "";
-		for (String str : words) { 
-			if ( request.getParameter(str) != null) {
-				switched = str;
-			} 
-		}
-		
+		String switched = factory.makeSwitched(keywords, request); 
         String param = request.getParameter(switched);
-        
-        /**
-         * Abbiamo due variabili: param e switched.
-         * switched è una delle keywords valide che sono passate in input, oppure è una stringa vuota.
-         * 
-         * switched viene utilizzato nel costrutto 
-         * @{code switch(switched){
-         * case "DeleteEmployee" : { //... };
-         * }
-         *  // ...
-         * } 
-         * 
-         * param è il parametro della richiesta HTTP associato alla keyword passata.
-         * 
-         * 
-         * Ad esempio, se la parola è "AddAccId", param potrà essere 1 o 2 o 3 o ... N e verrà utilizzato
-         * dalla strategia implementata in modo dinamico per aggiungerlo alla cache
-         */
         
 		switch(switched) {
 		case "DeleteEmployee" : {

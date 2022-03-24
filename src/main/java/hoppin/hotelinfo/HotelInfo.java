@@ -9,46 +9,38 @@ package hoppin.hotelinfo;
  */
 public class HotelInfo {
 	private String name;
-	
 	private String via;
 	private String city;
 	private String postcode;
-	
 	private int stars;
-	
 	private String description;
 	
-	public HotelInfo() {
-		super();
-	}
-	
 	/**
-	 * 
 	 * @return il nome dell'Hotel
 	 */
 	public String getName() { return name; }
+	
 	/**
-	 * 
 	 * @return la via dove si trova l'Hotel
 	 */
 	public String getVia() { return via; }
+	
 	/**
-	 * 
 	 * @return la città dove si trova l'Hotel
 	 */
 	public String getCity() { return city; }
+	
 	/**
-	 * 
 	 * @return Il codice postale della città in cui si trova l'Hotel
 	 */
 	public String getPostcode() { return postcode; }
+	
 	/**
-	 * 
 	 * @return Il numero di stelle dell'Hotel
 	 */
 	public int getStars() { return stars; }
+	
 	/**
-	 * 
 	 * @return La descrizione dell'Hotel
 	 */
 	public String getDescription() { return description; }

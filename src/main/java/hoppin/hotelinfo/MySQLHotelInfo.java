@@ -12,12 +12,7 @@ import hoppin.util.sql.*;
  * Si collega al database estendendo la superclasse {@link hoppin.util.sql.MySQLConnect}
  * 
  */
-public class MySQLHotelInfo extends MySQLCookie implements MySQLgetHotelNameById {
-	
-	public MySQLHotelInfo() {
-		super();
-	}
-	
+public class MySQLHotelInfo extends MySQLCookie implements MySQLgetHotelNameById {	
 	/**
 	 * 
 	 * @param i id dell'utente autenticato.
@@ -29,11 +24,10 @@ public class MySQLHotelInfo extends MySQLCookie implements MySQLgetHotelNameById
 
 	/**
 	 * 
-	 * @param id
 	 * @return un istanza di HotelInfo contenente le informazioni dell'Hotel
 	 * @see hoppin.hotelinfo.HotelInfo
 	 */
-	public HotelInfo getHotelInfo(int id) {
+	public HotelInfo getHotelInfo() {
 		HotelInfo hotel = null;
 		
 		String hotelName = this.getHotelNameById(conn, id);
@@ -60,11 +54,10 @@ public class MySQLHotelInfo extends MySQLCookie implements MySQLgetHotelNameById
 	
 	/**
 	 * 
-	 * @param id
 	 * @return un array di due elemento, il primo è l'id più grande delle immagini salvate,
 	 *  il secondo è il numero di immagini salvate, per un determinato Hotel.
 	 */
-	public Integer [] getMaxAndCountImageId(int id) {
+	public Integer [] getMaxAndCountImageId() {
 		
 		Integer [] res = new Integer[2];
 		res[0] = 1;
@@ -92,13 +85,12 @@ public class MySQLHotelInfo extends MySQLCookie implements MySQLgetHotelNameById
 	
 	/**
 	 * 
-	 * @param id id dell'utente autenticato
 	 * @param fn filename, nome del file
 	 */
-	public void uploadFileName(int id, String fn) {
+	public void uploadFileName(String fn) {
 		final int MaxNumImages = 6; //Numero massimo di immagini caricabili
 		
-		Integer[] res = this.getMaxAndCountImageId(id);
+		Integer[] res = this.getMaxAndCountImageId();
 		int max = res[0];
 		int count = res[1];
 		String Hname = this.getHotelNameById(conn, id);
@@ -125,10 +117,9 @@ public class MySQLHotelInfo extends MySQLCookie implements MySQLgetHotelNameById
 
 	/**
 	 * 
-	 * @param id id dell'utente autenticato.
 	 * @return una stringa che co0ntiene il nome dell'Hotel
 	 */
-	public String getHotelNameById(int id) {
+	public String getHotelNameById() {
 		
 		String HotelName = "";
 		try {
@@ -157,12 +148,11 @@ public class MySQLHotelInfo extends MySQLCookie implements MySQLgetHotelNameById
 	
 	/**
 	 * 
-	 * @param id dell'utente autenticato
 	 * @return un ArrayList di stringhe contenenti gli id delle immagini 
 	 */
-	public ArrayList<String> getHotelImagesId(int id){
+	public ArrayList<String> getHotelImagesId(){
 		ArrayList<String> ids = new ArrayList<String>();
-		String HotelName = this.getHotelNameById(id);
+		String HotelName = this.getHotelNameById();
 		String query = "select FileName from HotelImages where Hotel = ?;";
 		
 		try {
@@ -200,15 +190,15 @@ public class MySQLHotelInfo extends MySQLCookie implements MySQLgetHotelNameById
 
 	/**
 	 * Elimina il riferimento all'immagine dal database
-	 * @param id dell'utente autenticato
+	 * 
 	 * @param imgId id dell'immagine 
 	 * 
-	 * @see #getHotelImagesId(int)
+	 * @see #getHotelImagesId()
 	 * @see hoppin.hotelinfo.HotelInfoManagement
 	 * 
 	 * 
 	 */
-	public void deleteImg(int id, String imgId) {
+	public void deleteImg(String imgId) {
 		
 		if ( imgId.equals("") || imgId == null) {
 			return;

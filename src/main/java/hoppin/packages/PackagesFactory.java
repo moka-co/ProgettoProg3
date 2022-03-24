@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import hoppin.hotelinfo.HotelInfoManagement;
 import hoppin.util.factory.CookieFactory;
-import hoppin.util.sql.MySQLConnect;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
@@ -25,9 +24,9 @@ public class PackagesFactory implements CookieFactory{
 	 * @see hoppin.util.factory.CookieFactory
 	 * @see hoppin.util.sql.MySQLConnect
 	 */
-	public MySQLConnect makeDatabaseConnect(HttpServletRequest request) {
+	public MySQLPackages makeDatabaseConnect(HttpServletRequest request) {
 		int i = this.makeCookieGetter(request).getIdbyCookies();
-		MySQLConnect db = (MySQLConnect) new MySQLPackages(i);
+		MySQLPackages db = new MySQLPackages(i);
 		
 		return db;
 		

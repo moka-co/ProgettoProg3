@@ -17,7 +17,7 @@ public class HotelInfoBuilder {
 	
 	/**
 	 * Imposta dei parametri di HotelInfo
-	 * @param rs Il risultato di una query SQL
+	 * @param rs è il	 risultato di una query SQL
 	 * @throws SQLException
 	 */
 	public HotelInfoBuilder(ResultSet rs) throws SQLException {

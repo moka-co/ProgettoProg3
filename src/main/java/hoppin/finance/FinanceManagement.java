@@ -71,47 +71,21 @@ public class FinanceManagement extends HttpServlet {
 	 * implementa in modo dinamico  {@link hoppin.finance.FinanceStrategy#run()} e lo esegue.
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		
 		FinanceCache cache = FinanceCache.getInstance();
-		
 		FinanceFactory factory = new FinanceFactory();
-		int id = factory.makeCookieGetter(request).getIdbyCookies();
-		MySQLFinance db = new MySQLFinance(id);
+		MySQLFinance db = factory.makeDatabaseConnect(request);
 		
 		FinanceStrategy strategy = () -> { }; //Inizializzazione della funzione lambda strategy
 		
 		//lista di keywords valide che corrispondono ad un azione da effettuare:
-		List<String> words = Arrays.asList("AddRoomTypeId", "RemoveRoomTypeId", "NewPriceToIns", "ConfirmAddEtoPriceList",
+		List<String> keywords = Arrays.asList("AddRoomTypeId", "RemoveRoomTypeId", "NewPriceToIns", "ConfirmAddEtoPriceList",
 				"DeleteRoom", "ConfirmAddEtoSeason", "ConfirmEditEtoSeason", "EtoSeason", "DeleteEtoSeason" );
-		
-		String switched = "";
-		for (String str : words) {
-			if ( request.getParameter(str) != null) {
-				switched = str;
-			}
-		}
-		
-        String param = request.getParameter(switched);
+
         
-        /**
-         * Abbiamo due variabili: param e switched.
-         * switched è una delle keywords valide che sono passate in input, oppure è una stringa vuota.
-         * 
-         * switched viene utilizzato nel costrutto 
-         * @{code switch(switched){
-         * case "AddRoomTypeId" : { //... };
-         * }
-         *  // ...
-         * } 
-         * 
-         * param è il parametro della richiesta HTTP associato alla keyword passata.
-         * 
-         * 
-         */
+        String switched = factory.makeSwitched(keywords, request);
+        String param = request.getParameter(switched);
 
         switch( switched ) {
-
         case "AddRoomTypeId" : {
         	strategy = () -> cache.setRoomTypeId(param);
         	
@@ -208,12 +182,12 @@ public class FinanceManagement extends HttpServlet {
         	break;
         }
         
-        }
+        } //end switch
         
         
         strategy.run();
 		db.disconnect();
 		
-	}
+	} // end method
 
-}
+} // end class

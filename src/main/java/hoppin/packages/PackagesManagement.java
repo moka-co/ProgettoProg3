@@ -42,7 +42,7 @@ public class PackagesManagement extends HttpServlet {
 		//Serve sopratutto in caso un utente seleziona un pacchetto, poi ricarica la pagina e clicca su elimina pacchetto
 		
 		PackagesFactory factory = new PackagesFactory();
-		MySQLPackages db = (MySQLPackages) factory.makeDatabaseConnect(request);
+		MySQLPackages db = factory.makeDatabaseConnect(request);
 	
 		HttpSession session = request.getSession();
 		
@@ -73,34 +73,20 @@ public class PackagesManagement extends HttpServlet {
 		PackagesStrategy strategy = () -> { }; //Inizializzazione della funzione lambda strategy
 		
 		//lista di keywords valide che corrispondono ad un azione da effettuare:
-		List<String> words = Arrays.asList("ConfirmAddPackage", "SetValue", "DeletePackage", "ConfirmEditPackage");
+		List<String> keywords = Arrays.asList("ConfirmAddPackage", "SetValue", "DeletePackage", "ConfirmEditPackage");
 		
-		String switched = "";
-		for (String str : words) {
-			if ( request.getParameter(str) != null) {
-				switched = str;
-			}
-		}
-		
+		String switched = factory.makeSwitched(keywords, request); //una delle keywords precedenti
 		String param = request.getParameter(switched);
 		
-		 /**
-       	  * switched è una delle keywords valide che sono passate in input, oppure è una stringa vuota e 
-          * viene usata nel costrutto switch.
-          * param è il parametro della richiesta HTTP associato alla keyword passata.
-          * 
-          */
-		
 		switch (switched) {
-		
 		case "ConfirmAddPackage" : {
 			
 			strategy = () -> {
-				String Npack = request.getParameter("NPack");
-				String DPack = request.getParameter("DPack");
-				int PPack = Integer.valueOf(request.getParameter("PPack"));
+				String packgName = request.getParameter("NPack");
+				String packgDescription = request.getParameter("DPack");
+				int packPrice = Integer.valueOf(request.getParameter("PPack"));
 				
-				db.addPackage(Npack, DPack, PPack);
+				db.addPackage(packgName, packgDescription, packPrice);
 				
 			};
 			
@@ -108,17 +94,16 @@ public class PackagesManagement extends HttpServlet {
 			break;
 		}
 		
-		//Si attiva quando si clicca su un elemento della tabella
-		case "SetValue" : {
+		case "SetValue" : { //Si attiva quando si clicca su un elemento della tabella
 			strategy = () -> cache.setSelectedPackage(param);
 			break;
 		}
 		
 		case "DeletePackage" : {
 			strategy = () -> {	
-				//Se c'è un pacchetto nella cache
-				if ( cache.getSelectedPackage().equals("") == false ) {
-					db.deletePackage(cache.getSelectedPackage());
+				String packg = cache.getSelectedPackage();
+				if ( packg.equals("") == false ) { //Se c'è un pacchetto nella cache
+					db.deletePackage(packg);
 				}
 				cache.setSelectedPackage("");
 				

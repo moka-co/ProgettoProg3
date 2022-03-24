@@ -47,15 +47,14 @@ public class MySQLCookie extends MySQLConnect {
 	
 	/**
 	 * 
-	 * @param i id dell'utente
 	 * @return nome completo dell'utente
 	 */
-	public  String getNamebyId(int i) {
+	public  String getNamebyId() {
 		String completeName = null;
 		try {
 
 			PreparedStatement pss = conn.prepareStatement("select completeName from Employee where id = ?");
-			pss.setInt(1, i);
+			pss.setInt(1, id);
 			ResultSet rs = pss.executeQuery();
 			rs.next();
 			completeName = rs.getString("completeName");

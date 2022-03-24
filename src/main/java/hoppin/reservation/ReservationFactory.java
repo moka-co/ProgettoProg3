@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import hoppin.util.factory.CookieFactory;
-import hoppin.util.sql.MySQLConnect;
 import jakarta.servlet.http.HttpServletRequest;
 
 
@@ -21,24 +20,22 @@ public class ReservationFactory implements CookieFactory {
 	
 	/**
 	 * Crea una connessione al database
+	 * @param request viene usato per 
 	 * @see hoppin.util.sql.MySQLConnect
 	 */
-	public MySQLConnect makeDatabaseConnect(HttpServletRequest request) {
+	public MySQLReservation makeDatabaseConnect(HttpServletRequest request) {
 		int i = this.makeCookieGetter(request).getIdbyCookies();
-		MySQLConnect db = (MySQLConnect) new MySQLReservation(i);
-		
-		return db;
-		
+		MySQLReservation db = new MySQLReservation(i);
+		return db;		
 	}
 	
 	/**
 	 * Crea un oggetto Reservation utilizzando una HttpServletRequest che ne contiene i parametri
-	 * @param request
+	 * @param request richiesta HTTP che contiene i parametri da inserire nell'oggetto Reservation
 	 * @return un oggetto Reservation con i parametri inseriti
 	 */
 	public Reservation makeReservation( HttpServletRequest request ) {
 		ReservationBuilder rb = new ReservationBuilder(request);
-		
 		return rb.toReservation();
 	}
 	
@@ -73,5 +70,18 @@ public class ReservationFactory implements CookieFactory {
 		rs.close();
 		
 		return al;
+	}
+	
+	/**
+	 * 
+	 * @param request vedi {@link #makeDatabaseConnect(HttpServletRequest)}
+	 * @return un istanza di ArrayList di Reservation per l'Hotel ricavato dall'id presente in un cookie della richiesta HTTP
+	 */
+	public ArrayList<Reservation> makeReservationList(HttpServletRequest request) {
+		MySQLReservation db = this.makeDatabaseConnect(request);
+		ArrayList<Reservation> rlist = db.getReservationList();
+		
+		db.disconnect();
+		return rlist;
 	}
 }

@@ -35,16 +35,11 @@ public class ReservationManagement extends HttpServlet {
 		
         ReservationCache cache = ReservationCache.getInstance();
 		cache.setSingleValue(-1);
-		
-        ArrayList<Reservation> rlist = null;
         
         ReservationFactory factory = new ReservationFactory();
 		
-		MySQLReservation db = (MySQLReservation) factory.makeDatabaseConnect(request);
+		ArrayList<Reservation> rlist = factory.makeReservationList(request);
 		
-		rlist = db.getReservationList();
-		
-		db.disconnect();
 		HttpSession session=request.getSession();
 		session.setAttribute("rlist",rlist);
 		response.sendRedirect("/hoppin/ReservationManagement.jsp");
@@ -56,35 +51,19 @@ public class ReservationManagement extends HttpServlet {
 	 * implementa in modo dinamico  {@link EmployeeStrategy#run()} e lo esegue.
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		HttpSession session=request.getSession();
-
 		ReservationFactory factory = new ReservationFactory();
-		MySQLReservation db = (MySQLReservation) factory.makeDatabaseConnect(request);
+		MySQLReservation db = factory.makeDatabaseConnect(request);
 		ReservationCache cache = ReservationCache.getInstance();
 		
 		ReservationStrategy strategy = () -> { }; //Inizializzazione della funzione lambda strategy
 		
 		//lista di keywords valide che corrispondono ad un azione da effettuare:
-		List<String> words = Arrays.asList("AddValue", "ConfirmAddReservation", "DeleteReservation", "ConfirmEditReservation");
+		List<String> keywords = Arrays.asList("AddValue", "ConfirmAddReservation", "DeleteReservation", "ConfirmEditReservation");
 		
-		String switched = "";
-		for (String str : words) {
-			if ( request.getParameter(str) != null) {
-				switched = str;
-			}
-		}
-		
+		String switched = factory.makeSwitched(keywords, request); //una delle keywords in request oppure stringa vuota
 		String param = request.getParameter(switched);
 		
-		 /**
-         * switched è una delle keywords valide che sono passate in input, oppure è una stringa vuota e 
-         * viene usata nel costrutto switch.
-         * param è il parametro della richiesta HTTP associato alla keyword passata.
-         * 
-         */
 		switch ( switched ) {
-		
 		case "AddValue" : {
 			strategy = () -> {
 				int value = Integer.valueOf(param);
@@ -97,14 +76,8 @@ public class ReservationManagement extends HttpServlet {
 		case "ConfirmAddReservation" : {
 			strategy = () -> {
 			    Reservation res = factory.makeReservation(request);
-				boolean result = db.addReservation(res);
-					
-				if ( result == true) {
-					session.setAttribute("ResultAddEmployee","ok");
-						
-				}else {
-					session.setAttribute("ResultAddEmployee","no");
-				}
+				db.addReservation(res);
+
 			};
 			
 			doGet(request,response);
