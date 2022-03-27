@@ -8,69 +8,132 @@
 <head>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gestione pacchetti</title>
 
 
 <style>
+
 table {
   font-family: arial, sans-serif;
   width: 50%;
 }
+
 td, th {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
   background-color: 'white';
 }
+
+.center {
+    margin: auto;
+    width: 1600px;
+    
+}
+
+.packages-list {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2px;
+    align-items: left;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.packages-button {
+    margin-bottom: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 500px;
+}
+
+.buttons-container {
+    padding-top: 10px;
+}
+
+.buttons {
+    color: white;
+    background-color: black;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    border: 2px solid grey;
+}
+
+.previous {
+    background-color: black;
+    color: white;
+    font-size: 30px;
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px 10px;
+    margin-left: 6px;
+}
+
+.previous:hover {
+    background-color: #f1f1f1;
+    color: black;
+}
+
 </style>
 
 </head>
 <body>
 
-<div class=".anywhere">
-<h2>Pacchetti:</h2>
-<table>
-<tr>
-<td> <b> Nome Pacchetto </b></td>
-<td> <b> Descrizione </b> </td>
-<td> <b> Prezzo</b> </td>
-</tr>
+<div class="center">
+    <a href="HomePage.html" class="previous">&#8249; Homepage</a>
+<div class="packages-list">
+    <h2>Pacchetti:</h2>
+    <table>
+     <tr>
+            <td> <b> Nome Pacchetto </b></td>
+            <td> <b> Descrizione </b> </td>
+            <td> <b> Prezzo</b> </td>
+     </tr>
 
-<c:forEach items="${PackageList}" var="Package">
-	<tr id="${Package.name}" class="highlight">
-    	<td> <c:out value="${Package.name}"/>  </td>
-    	<td> <c:out value="${Package.description} "/> </td>
-    	<td> <c:out value="${Package.price} "/> </td>
-    	</tr>
-</c:forEach>
-</table>
+         <c:forEach items="${PackageList}" var="Package">
+	        <tr id="${Package.name}" class="highlight">
+            	<td> <c:out value="${Package.name}"/>  </td>
+            	<td> <c:out value="${Package.description} "/> </td>
+            	<td> <c:out value="${Package.price} "/> </td>
+            </tr>
+        </c:forEach>
+    </table>
 </div>
 
-</body>
-<button id="AddPackage">Aggiungi pacchetto</button>
-<button id="DeletePackage">Elimina pacchetto</button>
-<button id="EditPackage">Modifica pacchetto</button>
-<div id="invisibleDiv" hidden="hidden">
-		<p>Inserisci i dati del nuovo pacchetto: </p>
-       	 <form action="./PackagesManagement" method="post">
-        	Nome Pacchetto <input type="text" name="NPack"></input> <br>
-       	    Descrizione Pacchetto <input type="text" name="DPack"></input> <br>
-        	Prezzo Pacchetto <input type="text" name="PPack"></input> <br> <br>
-		<input name="ConfirmAddPackage" type="submit" value="Conferma Aggiunta Pacchetto"></input> <br>
-		</form>
+<div class="packages-button">
+    <div class="buttons-container">
+        <button class="buttons" id="AddPackage">Aggiungi pacchetto</button>
+        <button class="buttons" id="DeletePackage">Elimina pacchetto</button>
+        <button class="buttons" id="EditPackage">Modifica pacchetto</button>
+    </div>
+    
+    <div id="invisibleDiv" hidden="hidden">
+    		<p>Inserisci i dati del nuovo pacchetto: </p>
+           	 <form action="./PackagesManagement" method="post">
+               	Nome Pacchetto <input type="text" name="NPack"></input> <br>
+           	    Descrizione Pacchetto <input type="text" name="DPack"></input> <br>
+            	Prezzo Pacchetto <input type="text" name="PPack"></input> <br> <br>
+    		<input name="ConfirmAddPackage" type="submit" value="Conferma Aggiunta Pacchetto"></input> <br>
+    		</form>
+    </div>
+
+    <div id="invisibleDiv2" hidden="hidden">
+    		<p>Inserisci i dati da modificare del pacchetto selezionato: </p>
+          	 <form action="./PackagesManagement" method="post">
+               	Nome Pacchetto <input type="text" name="NPack"></input> <br>
+          	    Descrizione Pacchetto <input type="text" name="DPack"></input> <br>
+           	    Prezzo Pacchetto <input type="text" name="PPack"></input> <br> <br>
+    		<input name="ConfirmEditPackage" type="submit" value="Conferma Modifica Prenotazione"></input> <br>
+    		</form>
+    </div>
 </div>
 
-<div id="invisibleDiv2" hidden="hidden">
-		<p>Inserisci i dati da modificare del pacchetto selezionato: </p>
-       	 <form action="./PackagesManagement" method="post">
-        	Nome Pacchetto <input type="text" name="NPack"></input> <br>
-       	    Descrizione Pacchetto <input type="text" name="DPack"></input> <br>
-        	Prezzo Pacchetto <input type="text" name="PPack"></input> <br> <br>
-		<input name="ConfirmEditPackage" type="submit" value="Conferma Modifica Prenotazione"></input> <br>
-		</form>
 </div>
 
-<script >
+<script>
 pckgSelected=""
 
 $(document).ready(function() {

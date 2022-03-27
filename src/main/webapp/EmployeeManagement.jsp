@@ -5,9 +5,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Gestione dipendenti</title>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestione dipendenti</title>
+
 
 <style>
 table {
@@ -22,51 +25,128 @@ td, th {
   background-color: 'white';
 }
 
+.center {
+    margin: auto;
+    width: 1600px;
+}
+
+.employee-list {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2px;
+    align-items: left;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.employee-buttons {
+    margin-bottom: 2px;
+    padding-top: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 400px;
+}
+
+.employee-form {
+    margin: auto;
+    padding-left: 10px;
+    margin-top: 10px;
+    border: 2px solid black;
+    width: 400px;
+    height: 225px;
+}
+
+.in-form {
+    width: 300px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;   
+}
+
+#buttons-inform {
+    margin-top: 10px;
+}
+
+.buttons {
+    color: white;
+    background-color: black;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    border: 2px solid grey;
+}
+
+.DeleteEmployee {
+    color: white;
+    background-color: black;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    border: 2px solid grey;
+}
+
+.previous {
+    background-color: black;
+    color: white;
+    font-size: 30px;
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px 10px;
+    margin-left: 6px;
+}
+
+.previous:hover {
+    background-color: #f1f1f1;
+    color: black;
+}
+
 </style>
 
 </head>
 
 <body>
 
-<button id="AddEmployee">Aggiungi Dipendente</button>
-
-<div id="hiddenDiv" hidden="hidden">
- <p>Inserisci i dati dell'account dipendente </p>
-        <form action="./EmployeeManagement" method="post">
-        Nome e Cognome <input type="text" name="nome"></input> <br>
-        Email <input type="text" name="email"></input> <br>
-        Password <input type="text" name="password"></input> <br> <br>
-	<input name="ConfirmAddEmployee" type="submit" value="Conferma Aggiunta Dipendente"></input> <br>
-		</form>
+<div class="center">
+    <a href="HomePage.html" class="previous">&#8249; Homepage</a>
+    <div class="employee-list">
+        <h2>Dipendenti:</h2>
+        <table>
+            <tr>
+                <td> <b> Nome </b></td>
+                <td> <b> Email </b> </td>
+            </tr>
+    
+            <c:forEach items="${elist}" var="employee">
+                <tr id="${employee.id}" class="highlight">
+                    <td> <c:out value="${employee.completeName}"/>  </td>
+                    <td> <c:out value="${employee.email} "/> </td>
+                    </tr>
+            </c:forEach>
+    
+        </table>
+    </div>
+    
+    
+    <br>
+    <br>
+    
+    <div class="employee-buttons">
+        <input class="DeleteEmployee"  name="DeleteEmployee" type="submit" value="Elimina Dipendente"></input>
+        <button class="buttons" id="AddEmployee">Aggiungi Dipendente</button>
+        <div class="employee-form" id="hiddenDiv" hidden="hidden">
+         <p>Inserisci i dati dell'account dipendente </p>
+                <form class="in-form" action="./EmployeeManagement" method="post">
+                    Nome e Cognome <input type="text" name="nome"></input> <br>
+                    Email <input type="text" name="email"></input> <br>
+                    Password <input type="text" name="password"></input> <br> <br>
+                    <input id="buttons-inform" class="buttons" name="ConfirmAddEmployee" type="submit" value="Conferma Aggiunta Dipendente"></input> <br>
+                </form>
+        </div>
+    </div>
 </div>
 
-<br>
-<div>
-<h2>Dipendenti:</h2>
-<table>
-<tr>
-<td> <b> Nome </b></td>
-<td> <b> Email </b> </td>
-</tr>
 
-<c:forEach items="${elist}" var="employee">
-	<tr id="${employee.id}" class="highlight">
-    	<td> <c:out value="${employee.completeName}"/>  </td>
-    	<td> <c:out value="${employee.email} "/> </td>
-    	</tr>
-</c:forEach>
-
-</table>
-</div>
-
-
-<br>
-<br>
-
-
-<div>
-	<input class="DeleteEmployee"  name="DeleteEmployee" type="submit" value="Elimina Dipendente"></input>
-</div>
 <script>
  $(document).ready(function() {
         $(".highlight").click(function() {
