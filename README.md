@@ -1,6 +1,6 @@
 ## Installazione
 ### Con Docker
-1. `git clone https://github.com/mokassino/ProgettoProg3` && cd ProgettoProg3
+1. `git clone https://github.com/mokassino/ProgettoProg3 && cd ProgettoProg3`
 2. `docker build -t mokassino/hoppin .`
 3. `docker start -d -it -p 8080:8080 mokassino/hoppin`
 4. Dentro al contenitore, fare `hostname -I` e prendere l'indirizzo ip, dovrebbe essere qualcosa del tipo `172.17.0.2`
