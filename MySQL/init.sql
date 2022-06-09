@@ -18,7 +18,7 @@ INSERT INTO User (id, completeName, email, passw_hash, accType)
 VALUES (1,'Pinco Pallo','pinco@pallo','zinco','Owner');
 
 INSERT INTO User (id, completeName, email, passw_hash, accType, sid)
-VALUES (2, "Salve Salvino",  "salve@salvino", "salvino", "Employee",1 );
+VALUES (2, "Salvatore Salvia",  "salvo@salvia", "salvia", "Employee",1 );
 
 select * from User where email='pinco@pallo' and passw_hash='zinco';
 -- Query esempio per verificare utente
