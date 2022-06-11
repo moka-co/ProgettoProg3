@@ -83,7 +83,7 @@ td, th {
 <body>
 
 <div class="center">
-    <a href="HomePage.html" class="previous">&#8249; Homepage</a>
+    <a href="HomePage.jsp" class="previous">&#8249; Homepage</a>
 <div class="packages-list">
     <h2>Pacchetti:</h2>
     <table>

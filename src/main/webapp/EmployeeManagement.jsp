@@ -108,7 +108,7 @@ td, th {
 <body>
 
 <div class="center">
-    <a href="HomePage.html" class="previous">&#8249; Homepage</a>
+    <a href="HomePage.jsp" class="previous">&#8249; Homepage</a>
     <div class="employee-list">
         <h2>Dipendenti:</h2>
         <table>

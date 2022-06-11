@@ -99,7 +99,7 @@ td, th {
 
 <br>
 <div class="center">
-    <a href="HomePage.html" class="previous">&#8249; Homepage</a>
+    <a href="HomePage.jsp" class="previous">&#8249; Homepage</a>
     <div class="reservations">
         <h2>Prenotazioni:</h2>
         <table>

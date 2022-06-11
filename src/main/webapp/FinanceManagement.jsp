@@ -152,7 +152,7 @@ td, th {
 <body>
 
 <div class="center">
-    <a href="HomePage.html" class="previous">&#8249; Homepage</a>
+    <a href="HomePage.jsp" class="previous">&#8249; Homepage</a>
     <div class="counter">
         Counter di tutte le prenotazioni:  <c:out value="${allReservation}"/> <br>
         Profitti totali: <c:out value="${sumAllPrice}"/> <br>
