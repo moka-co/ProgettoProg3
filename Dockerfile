@@ -10,8 +10,8 @@ RUN apt-get install wget vim openjdk-11-jdk-headless mysql-client -y
 ENV JRE_HOME /usr/lib/jvm/java-11-openjdk-amd64/
 
 # Install Tomcat
-RUN cd /opt/ && wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.18/bin/apache-tomcat-10.0.18.tar.gz && \
-	tar -xf apache-tomcat-10.0.18.tar.gz && mv apache-tomcat-10.0.18 tomcat && \ 
+RUN cd /opt/ && wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.22/bin/apache-tomcat-10.0.22.tar.gz && \
+	tar -xf apache-tomcat-10.0.22.tar.gz && mv apache-tomcat-10.0.22 tomcat && \ 
 	cd tomcat && chmod u+x bin/*.sh 
 
 # Install J-Connector
