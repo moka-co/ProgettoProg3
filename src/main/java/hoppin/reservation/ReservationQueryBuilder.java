@@ -60,11 +60,14 @@ public class ReservationQueryBuilder extends QueryBuilder {
 		}
 		
 		if ( res.getPckg() != "") {
+			if (p == true) {
+				sb.append(", ");
+			}
 			sb.append("Package = ?");
 			p = true;
 		}
 		
-		sb.append(" WHERE id = ?");
+		sb.append(" WHERE id = ?;");
 		
 		query = sb.toString();
 		return query;
@@ -80,7 +83,9 @@ public class ReservationQueryBuilder extends QueryBuilder {
 			return null;
 		}
 		
-		PreparedStatement ps = conn.prepareStatement( this.makeQuery() );
+		String q = this.makeQuery();
+		System.out.println(q);
+		PreparedStatement ps = conn.prepareStatement( q );
 		
 		int p = 1;
 		if ( res.getRoomNum() != "") {

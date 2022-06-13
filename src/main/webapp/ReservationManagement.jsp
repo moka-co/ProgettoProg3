@@ -174,7 +174,9 @@ $(document).ready(function() {
 					$("#AddReservation").html("Aggiungi prenotazione");
 				}
 			}
+			
 	)
+
 });	
 
 var trId = 0;

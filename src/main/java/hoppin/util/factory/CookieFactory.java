@@ -17,14 +17,14 @@ import jakarta.servlet.http.HttpServletResponse;
 public interface CookieFactory extends AbstractFactory {
 	
 	/**
-	 * @see hoppin.util.CookieGetter
+	 * @see hoppin.util.cookie.CookieGetter
 	 */
 	public default CookieGetter makeCookieGetter(HttpServletRequest request) {
 		return new CookieGetter(request);
 	}
 	
 	/**
-	 * @see hoppin.util.CookieSetter
+	 * @see hoppin.util.cookie.CookieSetter
 	 */
 	public default void makeCookieSetter(HttpServletResponse response, String user) {
 		new CookieSetter(response,user);

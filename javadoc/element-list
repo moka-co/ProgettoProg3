@@ -1,0 +1,10 @@
+hoppin.authentication
+hoppin.employee
+hoppin.finance
+hoppin.hotelinfo
+hoppin.packages
+hoppin.reservation
+hoppin.util
+hoppin.util.cookie
+hoppin.util.factory
+hoppin.util.sql
