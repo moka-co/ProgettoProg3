@@ -18,7 +18,7 @@ import java.util.Properties;
 
 public class PropertyFactory {
 	private static PropertyFactory id = null;
-	private static final String pathToConfig = "/home/kurush/prog/eclipse-workspace/hoppin/";
+	private static final String pathToConfig = "/opt/";
 	private HashMap<String, String> map = null;
 	
 	/**
