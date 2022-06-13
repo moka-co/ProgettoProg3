@@ -12,6 +12,10 @@ public class FinanceCache {
 	private String RoomTypeId;
 	private String EtoSeason; 
 	
+	private FinanceCache() {
+		super();
+	}
+	
 	public static FinanceCache getInstance() {
 		if ( id == null )
 			id = new FinanceCache();

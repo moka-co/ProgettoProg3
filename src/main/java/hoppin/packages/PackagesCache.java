@@ -11,7 +11,7 @@ public class PackagesCache {
 	protected static PackagesCache id = null;
 	private String SelectdPckg;
 	
-	public PackagesCache() {
+	private PackagesCache() {
 		super();
 	}
 	

@@ -12,6 +12,10 @@ public class ReservationCache {
 	private static ReservationCache id = null;
 	private int val;
 	
+	private ReservationCache() {
+		super();
+	}
+	
 	
 	public static ReservationCache getInstance() {
 		if ( id == null) {

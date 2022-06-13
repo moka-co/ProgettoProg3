@@ -11,7 +11,7 @@ public class EmployeeCache {
 	private static EmployeeCache id = null;
 	private List<Integer> values;
 	
-	public EmployeeCache() {
+	private EmployeeCache() {
 		if ( values == null ) {
 			values = new ArrayList<Integer>();
 		}
